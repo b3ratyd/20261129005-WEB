@@ -814,7 +814,7 @@ def main():
     (ROOT / "llms.txt").write_text(llms, encoding="utf-8")
     (ROOT / "assets/img/skyline.svg").write_text(make_skyline(), encoding="utf-8")
     # önbellek kırıcı: css/js adreslerine sürüm eklenir (telefonlar eski dosyayı tutmasın). Sürümü artırmak için ASSET_V değiştir.
-    ASSET_V = "20261126a"
+    ASSET_V = "20261126c"
     for lg in ("tr", "en"):
         for f in (ROOT / lg).glob("*.html"):
             h = f.read_text(encoding="utf-8")

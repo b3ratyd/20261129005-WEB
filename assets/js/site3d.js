@@ -76,7 +76,7 @@ export function enhance(kind, ctx) {
   }
 
   /* GALERİ: kaydırarak fotoğraflarda yolculuk (kamera tünelde ilerler) */
-  if (kind === 'gallery' && head && false /* yolculuk kapalı: galeri doğrudan fotoğraf ızgarasıyla açılır */) {
+  if (kind === 'gallery' && head && innerWidth > 700) {
     const P = D.photos, n = P.length, sec = document.createElement('section'); sec.className = 'journey'; sec.setAttribute('aria-label', EN ? 'Photo journey' : 'Fotoğraf yolculuğu');
     sec.innerHTML = `<div class="jstick"><div class="jcap"><small></small><h2></h2><p class="jc"></p><p class="js"></p><button class="jbtn" type="button">${EN ? 'Read the story' : 'Hikâyeyi oku'}</button></div><div class="jbar"><i></i></div><p class="jhint">${EN ? 'scroll to travel ↓' : 'yolculuk için kaydır ↓'}</p></div>`;
     head.before(sec); const cap = sec.querySelector('.jcap'); /* galeri doğrudan sergi koridoruyla açılır; başlık ve ızgara yolculuktan sonra gelir */
@@ -88,6 +88,10 @@ export function enhance(kind, ctx) {
       if (state.jActive && idx !== last) { last = idx; const p = P[idx]; cap.querySelector('small').textContent = `${idx + 1} / ${n}`; cap.querySelector('h2').textContent = p[3] || ''; cap.querySelector('.jc').textContent = p[4] || ''; cap.querySelector('.js').textContent = p[5] || ''; if (g) g.fromTo(cap, { opacity: 0, y: 34 }, { opacity: 1, y: 0, duration: .55, ease: 'power3.out' }); }
     };
     on(sbody, 'scroll', upd, { passive: true }); upd();
+    /* pencere açılırken yükseklik henüz 0 olabilir: yerleşim oturunca yolculuğu başa (1. fotoğraf) hizala */
+    { let ux = false; ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach((ev) => on(sbody, ev, () => { ux = true; }, { passive: true }));
+      const fix = () => { if (!ux && sbody.scrollTop !== 0) sbody.scrollTop = 0; set(); upd(); };
+      const ro2 = new ResizeObserver(fix); ro2.observe(sbody); offs.push(() => ro2.disconnect()); [100, 400, 900, 1600, 2600, 4000, 6500].forEach((ms) => setTimeout(fix, ms)); }
     on(sec.querySelector('.jbtn'), 'click', () => window.dispatchEvent(new CustomEvent('photo:open', { detail: state.jIdx })));
   }
 
