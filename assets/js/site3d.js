@@ -76,7 +76,7 @@ export function enhance(kind, ctx) {
   }
 
   /* GALERİ: kaydırarak fotoğraflarda yolculuk (kamera tünelde ilerler) */
-  if (kind === 'gallery' && head && innerWidth > 700) {
+  if (kind === 'gallery' && head && false /* yolculuk kapalı: galeri doğrudan fotoğraf ızgarasıyla açılır */) {
     const P = D.photos, n = P.length, sec = document.createElement('section'); sec.className = 'journey'; sec.setAttribute('aria-label', EN ? 'Photo journey' : 'Fotoğraf yolculuğu');
     sec.innerHTML = `<div class="jstick"><div class="jcap"><small></small><h2></h2><p class="jc"></p><p class="js"></p><button class="jbtn" type="button">${EN ? 'Read the story' : 'Hikâyeyi oku'}</button></div><div class="jbar"><i></i></div><p class="jhint">${EN ? 'scroll to travel ↓' : 'yolculuk için kaydır ↓'}</p></div>`;
     head.before(sec); const cap = sec.querySelector('.jcap'); /* galeri doğrudan sergi koridoruyla açılır; başlık ve ızgara yolculuktan sonra gelir */

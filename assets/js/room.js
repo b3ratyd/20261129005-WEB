@@ -8,9 +8,9 @@ import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
-import {startArcade,LESSON} from './arcade.js?v=20261125p';
-import {mountStage} from './stage3d.js?v=20261125p';
-import {enhance} from './site3d.js?v=20261125p';
+import {startArcade,LESSON} from './arcade.js?v=20261126a';
+import {mountStage} from './stage3d.js?v=20261126a';
+import {enhance} from './site3d.js?v=20261126a';
 const $=s=>document.querySelector(s),V=(x,y,z)=>new THREE.Vector3(x,y,z);
 const D=JSON.parse($('#rdata').textContent),T=D.t,CV=D.cv;
 /* ---------- kalite: donmayı önlemek için otomatik ayar ---------- */
