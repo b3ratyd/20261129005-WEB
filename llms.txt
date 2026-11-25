@@ -1,0 +1,20 @@
+# Berat Yanardağ
+
+> Berat Yanardağ is an Computer Programming student in Antalya working on web interfaces and motion graphics. This is a bilingual (Turkish/English) personal portfolio site.
+> Berat Yanardağ, Antalya'da Bilgisayar Programcılığı okuyan; web arayüzü ve hareketli grafik üzerine çalışan bir öğrencidir.
+
+## English
+- [Home](https://www.example.com/en/): introduction, featured projects, gallery preview
+- [About](https://www.example.com/en/about.html): CV, class schedule, interests, skills
+- [Projects](https://www.example.com/en/projects.html): Graphic Animation I course pieces
+- [Blog](https://www.example.com/en/blog.html): posts on building a 3D site with AI, a backend-free contact form, designing a web interface in Photoshop
+- [Gallery](https://www.example.com/en/gallery.html): fifteen photos with short captions
+- [Contact](https://www.example.com/en/contact.html): address, phone, email and contact form
+
+## Türkçe
+- [Ana sayfa](https://www.example.com/tr/)
+- [Hakkımda](https://www.example.com/tr/hakkimda.html)
+- [Projeler](https://www.example.com/tr/projeler.html)
+- [Blog](https://www.example.com/tr/blog.html)
+- [Galeri](https://www.example.com/tr/galeri.html)
+- [İletişim](https://www.example.com/tr/iletisim.html)

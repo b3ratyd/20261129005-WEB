@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="100%" font-family="system-ui,sans-serif">
+<defs>
+<linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1236"/><stop offset="1" stop-color="#2d1b4a"/></linearGradient>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1030"/><stop offset=".7" stop-color="#3b2a6e"/><stop offset="1" stop-color="#ff7aa8"/></linearGradient>
+<linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a2f3a"/><stop offset="1" stop-color="#20121a"/></linearGradient>
+<linearGradient id="scr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ee1ff"/><stop offset=".5" stop-color="#7a5bff"/><stop offset="1" stop-color="#ff6aa8"/></linearGradient>
+<radialGradient id="warm"><stop offset="0" stop-color="#ffb36b" stop-opacity=".55"/><stop offset="1" stop-color="#ffb36b" stop-opacity="0"/></radialGradient>
+<radialGradient id="cool"><stop offset="0" stop-color="#5ee1ff" stop-opacity=".4"/><stop offset="1" stop-color="#5ee1ff" stop-opacity="0"/></radialGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="soft"><feGaussianBlur stdDeviation="14"/></filter>
+<clipPath id="win"><rect x="90" y="90" width="330" height="300" rx="10"/></clipPath>
+</defs>
+<style>
+@keyframes rain{from{transform:translate(0,-60px)}to{transform:translate(-30px,420px)}}
+@keyframes tw{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes fl{0%,100%{opacity:.9}46%{opacity:.7}50%{opacity:1}}
+@keyframes br{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.04)}}
+@keyframes sl{0%,18%{opacity:1}22%,38%{opacity:0}42%,100%{opacity:0}}
+.r{animation:rain 1.1s linear infinite}.r2{animation:rain .8s linear infinite;animation-delay:-.4s}
+.t{animation:tw 2.4s ease-in-out infinite}.f{animation:fl 3s infinite}.cat{transform-origin:900px 565px;animation:br 3.2s ease-in-out infinite}
+.s1{animation:sl 12s infinite}.s2{animation:sl 12s 4s infinite;opacity:0}.s3{animation:sl 12s 8s infinite;opacity:0}
+</style>
+<!-- duvar + zemin -->
+<rect width="1200" height="700" fill="url(#wall)"/>
+<rect y="520" width="1200" height="180" fill="url(#floor)"/>
+<g stroke="#2a1822" stroke-width="2" opacity=".6"><path d="M0 560H1200M0 610H1200M0 670H1200"/></g>
+<!-- pencere + şehir + yağmur -->
+<rect x="80" y="80" width="350" height="320" rx="14" fill="#120c24" stroke="#4b3a7a" stroke-width="6"/>
+<g clip-path="url(#win)"><rect x="90" y="90" width="330" height="300" fill="url(#sky)"/>
+<g fill="#150d2e"><rect x="100" y="250" width="50" height="140"/><rect x="160" y="210" width="60" height="180"/><rect x="230" y="270" width="45" height="120"/><rect x="285" y="190" width="70" height="200"/><rect x="365" y="240" width="55" height="150"/></g>
+<g fill="#ffd27a" class="t"><rect x="172" y="225" width="8" height="8"/><rect x="195" y="255" width="8" height="8"/><rect x="298" y="205" width="8" height="8"/><rect x="320" y="240" width="8" height="8"/><rect x="108" y="270" width="8" height="8"/><rect x="376" y="262" width="8" height="8"/><rect x="240" y="292" width="8" height="8"/></g>
+<g stroke="#bfe3ff" stroke-width="1.5" opacity=".55"><g class="r"><path d="M110 60l-8 22M170 20l-8 22M240 40l-8 22M300 0l-8 22M360 30l-8 22M410 10l-8 22M140 140l-8 22M210 120l-8 22M330 150l-8 22M390 110l-8 22"/></g><g class="r2"><path d="M130 100l-8 22M200 70l-8 22M270 100l-8 22M340 80l-8 22M400 60l-8 22M120 190l-8 22M260 200l-8 22M370 190l-8 22"/></g></g></g>
+<path d="M255 80V400M80 240H430" stroke="#4b3a7a" stroke-width="6"/>
+<rect x="60" y="400" width="390" height="16" rx="6" fill="#3a2a5c"/><g transform="translate(90 380)"><rect width="26" height="22" rx="4" fill="#e8e0f5"/><path d="M13 0c-6-12 6-12 0-24M13 0c6-12-6-12 0-24" stroke="#fff" stroke-width="2" fill="none" opacity=".6"/></g>
+<!-- ışık dizisi -->
+<path d="M0 40Q300 110 600 50T1200 60" stroke="#2a1d44" stroke-width="3" fill="none"/>
+<g filter="url(#glow)" class="t"><circle cx="60" cy="68" r="7" fill="#ffd27a"/><circle cx="170" cy="86" r="7" fill="#ff9ac1"/><circle cx="290" cy="90" r="7" fill="#ffd27a"/><circle cx="420" cy="80" r="7" fill="#9ae6ff"/><circle cx="560" cy="58" r="7" fill="#ffd27a"/><circle cx="700" cy="52" r="7" fill="#ff9ac1"/><circle cx="840" cy="62" r="7" fill="#ffd27a"/><circle cx="990" cy="64" r="7" fill="#9ae6ff"/><circle cx="1130" cy="62" r="7" fill="#ffd27a"/></g>
+<!-- neon -->
+<text x="640" y="150" font-size="76" font-weight="800" text-anchor="middle" fill="#ff7ac8" filter="url(#glow)" class="f" opacity=".95">berat</text>
+<text x="640" y="178" font-size="15" text-anchor="middle" fill="#ffb3e6" letter-spacing="6" opacity=".8">YAZILIM · TASARIM · KAHVE</text>
+<!-- pano (polaroidler) -->
+<rect x="900" y="95" width="230" height="170" rx="8" fill="#6a4a3a"/>
+<g><rect x="915" y="110" width="62" height="80" fill="#f4efe6" transform="rotate(-5 946 150)"/><rect x="921" y="116" width="50" height="58" fill="#ff9a6a" transform="rotate(-5 946 150)"/><rect x="990" y="125" width="62" height="80" fill="#f4efe6" transform="rotate(4 1021 165)"/><rect x="996" y="131" width="50" height="58" fill="#5ac8d8" transform="rotate(4 1021 165)"/><rect x="1060" y="108" width="62" height="80" fill="#f4efe6" transform="rotate(-2 1091 148)"/><rect x="1066" y="114" width="50" height="58" fill="#b58cff" transform="rotate(-2 1091 148)"/></g>
+<!-- büyük ekran / masa -->
+<ellipse cx="640" cy="470" rx="320" ry="160" fill="url(#cool)"/>
+<rect x="450" y="215" width="380" height="215" rx="14" fill="#0b0b14" stroke="#2a2a3a" stroke-width="8"/>
+<rect x="462" y="227" width="356" height="191" rx="6" fill="url(#scr)" opacity=".9"/>
+<g><rect class="s1" x="520" y="245" width="240" height="155" rx="6" fill="#ffffff22"/><circle class="s1" cx="640" cy="322" r="48" fill="#fff" opacity=".55"/><rect class="s2" x="520" y="245" width="240" height="155" rx="6" fill="#00000033"/><path class="s2" d="M560 380L640 270L720 380z" fill="#fff" opacity=".6"/><rect class="s3" x="520" y="245" width="240" height="155" rx="6" fill="#ffffff18"/><path class="s3" d="M545 300h190M545 330h150M545 360h110" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".7"/></g>
+<text x="640" y="236" font-size="12" text-anchor="middle" fill="#fff" opacity=".8" letter-spacing="3">GRAFİK ANİMASYON 1</text>
+<rect x="620" y="430" width="40" height="40" fill="#15151f"/><rect x="560" y="466" width="160" height="10" rx="5" fill="#15151f"/>
+<rect x="330" y="478" width="620" height="26" rx="6" fill="#8a5a3a"/><rect x="345" y="504" width="14" height="110" fill="#5a3a26"/><rect x="920" y="504" width="14" height="110" fill="#5a3a26"/>
+<rect x="520" y="470" width="240" height="10" rx="4" fill="#1b1b28"/>
+<!-- lamba + kupa -->
+<ellipse cx="400" cy="440" rx="70" ry="60" fill="url(#warm)"/><path d="M400 478V420" stroke="#3a3a48" stroke-width="5"/><path d="M372 424l28-38 28 38z" fill="#ffcf8a" class="f"/>
+<rect x="790" y="445" width="30" height="33" rx="5" fill="#f2ece2"/><path d="M806 440c-4-10 4-10 0-20" stroke="#fff" opacity=".5" fill="none" stroke-width="2" class="t"/>
+<!-- yatak (sol alt) -->
+<rect x="40" y="520" width="300" height="70" rx="12" fill="#2a2038"/><rect x="50" y="490" width="280" height="52" rx="18" fill="#6a7fc0"/><rect x="60" y="470" width="90" height="34" rx="16" fill="#f3eef8"/><rect x="40" y="440" width="18" height="150" rx="6" fill="#1b1330"/>
+<!-- halı + kedi -->
+<ellipse cx="860" cy="610" rx="230" ry="50" fill="#3a8f8a" opacity=".75"/>
+<g class="cat"><ellipse cx="900" cy="590" rx="42" ry="28" fill="#15121c"/><circle cx="930" cy="562" r="22" fill="#15121c"/><path d="M915 545l-4-18 14 10zM945 545l4-18-14 10z" fill="#15121c"/><circle cx="923" cy="560" r="3" fill="#ffd27a"/><circle cx="937" cy="560" r="3" fill="#ffd27a"/><path d="M860 592q-30 4-28 22" stroke="#15121c" stroke-width="9" stroke-linecap="round" fill="none"/></g>
+<!-- raf + bitki -->
+<rect x="1000" y="330" width="160" height="10" rx="3" fill="#6a4a3a"/><g><rect x="1015" y="285" width="14" height="45" fill="#e06a5a"/><rect x="1032" y="292" width="12" height="38" fill="#5a9be0"/><rect x="1047" y="280" width="16" height="50" fill="#e0c25a"/><path d="M1110 330v-30M1110 300c-20-10-28-30-24-40M1110 300c18-12 28-32 22-44M1110 310c-10-5-20-5-30 0" stroke="#4fae66" stroke-width="6" fill="none" stroke-linecap="round"/><rect x="1095" y="318" width="30" height="14" rx="3" fill="#d98a4a"/></g>
+<!-- ön vinyet -->
+<rect width="1200" height="700" fill="none" stroke="none"/>
+<ellipse cx="600" cy="350" rx="700" ry="420" fill="none" stroke="#00000066" stroke-width="160" opacity=".7" filter="url(#soft)"/>
+<!-- alt çubuk -->
+<g transform="translate(600 668)"><rect x="-285" y="-22" width="570" height="40" rx="20" fill="#0b0e16" opacity=".85" stroke="#7a5bff" stroke-opacity=".6"/><g font-size="14" fill="#e6e0ff" text-anchor="middle"><text x="-225" y="4">Ana oda</text><text x="-150" y="4">Hakkımda</text><text x="-60" y="4" fill="#ff9ac1">🎬 Projeler</text><text x="30" y="4">Galeri</text><text x="95" y="4">Blog</text><text x="170" y="4">İletişim</text><text x="245" y="4">🛝 Kaydırak</text></g></g>
+<text x="20" y="28" font-size="13" fill="#cfc4ff" opacity=".8">gece 02:14 · yağmur · lo-fi</text>
+</svg>

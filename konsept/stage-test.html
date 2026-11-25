@@ -1,0 +1,12 @@
+<!doctype html><meta charset="utf-8"><title>stage test</title>
+<style>body{margin:0;background:#05060d;color:#fff;font:12px monospace}.swin{position:relative;width:900px;height:560px;overflow:hidden;background:#06070f}.sbar{height:40px;background:#0b0d16}.sbody{position:absolute;left:0;right:0;top:40px;bottom:0;overflow:auto}.stage3d{position:absolute;left:0;top:40px;width:100%;height:calc(100% - 40px);pointer-events:none}.page-head{height:300px;position:relative}.slot3d.hero{position:absolute;right:0;top:0;bottom:0;width:40%}.fill{height:1400px}#err{position:absolute;left:8px;bottom:8px;color:#ff8fa8;z-index:9}</style>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+<div class="swin" id="w"><div class="sbar"></div><div class="sbody" id="b"><div class="page-head"><h1 style="padding:60px 30px">Sayfa başlığı</h1><div class="slot3d hero"></div></div><div class="fill"></div></div><div id="err"></div></div>
+<script type="module">
+import { mountStage } from '../assets/js/stage3d.js';
+const q = new URLSearchParams(location.search), kind = q.get('k') || 'about', sc = +(q.get('s') || 0);
+try { const swin = document.getElementById('w'), sbody = document.getElementById('b');
+  mountStage(kind, { D: { proj: [['p1'], ['p2'], ['p3'], ['p5'], ['p6'], ['p4']], photos: [], roles: [], fly: {} }, imgBase: '../assets/img/', swin, sbody, tier: 'high', state: { jp: 0, jActive: false, jIdx: 0 } });
+  setTimeout(() => { sbody.scrollTop = sc; }, 300);
+} catch (e) { document.getElementById('err').textContent = 'HATA: ' + e.message; console.error(e); }
+</script>

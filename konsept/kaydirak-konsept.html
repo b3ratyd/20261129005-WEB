@@ -1,0 +1,61 @@
+<!doctype html><html lang="tr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kaydırak konsepti: internetin derinliklerine dalış</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:16px/1.6 system-ui,sans-serif;color:#e8f6ff;background:linear-gradient(180deg,#0b1020 0,#0c2a52 14%,#0a5a8a 34%,#06436c 55%,#032a45 78%,#02101c 100%);overflow-x:hidden}
+.tag{position:fixed;left:16px;top:12px;font:700 11px ui-monospace,monospace;letter-spacing:.2em;color:#9fd8ff;z-index:5}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px}
+section{padding:64px 0;position:relative}
+h1{font:800 clamp(2rem,6vw,3.4rem)/1.1 system-ui;margin:.2em 0;background:linear-gradient(90deg,#ffd27a,#7fe4ff);-webkit-background-clip:text;color:transparent}
+h2{font:800 1.5rem system-ui;margin:0 0 .3rem}small.k{color:#7fe4ff;font:700 12px ui-monospace,monospace;letter-spacing:.16em}
+p{color:#cfe6f5;margin:.3rem 0}
+/* kaydırak + paket */
+.slide{height:200px;position:relative;margin:30px 0}.slide svg{width:100%;height:100%}
+.pkt{position:absolute;width:44px;height:34px;border-radius:9px;background:#7fe4ff;color:#06203a;font:800 14px system-ui;display:grid;place-items:center;offset-path:path("M20 20 C 300 20, 330 160, 520 150 S 820 30, 940 110");animation:go 6s ease-in-out infinite}
+@keyframes go{from{offset-distance:0}to{offset-distance:100%}}
+.route{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:6px}.node{padding:.8rem;border-radius:14px;background:#ffffff12;border:1px solid #ffffff2a;text-align:center;font-size:.9rem}.node b{display:block;font-size:1.05rem;color:#ffd27a}
+/* dalış */
+.gauge{position:absolute;left:6px;top:0;bottom:0;width:3px;background:linear-gradient(#7fe4ff,#ffb25a)}
+.stop{display:grid;grid-template-columns:90px 1fr 1fr;gap:16px;align-items:stretch;margin:0 0 26px;position:relative}
+.depth{font:800 1.5rem ui-monospace,monospace;color:#ffd27a;align-self:center;text-align:right}.depth small{display:block;font:600 .7rem system-ui;color:#9fd8ff}
+.card{padding:1rem 1.1rem;border-radius:18px;border:1px solid #ffffff2a;background:#02101c88;backdrop-filter:blur(6px)}
+.card.web{border-top:3px solid #7fe4ff}.card.kemer{border-top:3px solid #ffb25a;background:#2a160a55}
+.card h3{margin:0 0 .2rem;font:800 1.05rem system-ui}.card .lab{font:700 .68rem ui-monospace,monospace;letter-spacing:.14em;color:#7fe4ff}.kemer .lab{color:#ffb25a}
+code{background:#ffffff18;padding:.05rem .4rem;border-radius:6px;font-size:.9em}
+.fish{position:absolute;font-size:28px;animation:sw 14s linear infinite}@keyframes sw{from{left:-60px}to{left:105%}}
+.bub{position:absolute;bottom:-20px;width:10px;height:10px;border-radius:50%;border:1px solid #bfefff99;animation:up 9s linear infinite}@keyframes up{to{transform:translateY(-900px);opacity:0}}
+/* panik anı: nefes al */
+.breathe{margin-top:.6rem;display:flex;gap:1rem;align-items:center}.ring{width:64px;height:64px;border-radius:50%;border:3px solid #ffb25a;display:grid;place-items:center;font-size:1.3rem;transition:transform 4s ease-in-out,background 1s}
+.ring.in{transform:scale(1.5);background:#ffb25a33}button{border:0;border-radius:999px;padding:.6rem 1.2rem;font:700 14px system-ui;cursor:pointer;background:linear-gradient(135deg,#ffb25a,#ff7a3d);color:#2a1408}
+.bug{color:#ff8fa8;font-family:ui-monospace,monospace;font-size:.85rem}.ok{color:#5fe0a8}
+.end{text-align:center;padding:70px 0 90px}
+@media(max-width:720px){.stop{grid-template-columns:1fr}.depth{text-align:left}.route{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.pkt,.fish,.bub{animation:none}.ring{transition:none}}
+</style>
+<div class="tag">KONSEPT: UYGULANMADI</div>
+<section class="wrap" style="padding-top:90px"><small class="k">1 · KAYDIRAK</small><h1>Pencereden kay, bir pakete dönüş</h1><p>Kaydıraktan kayınca bir web isteği olursun: tarayıcından çıkıp interneti geçer, sunucuya varır, sayfanın dosyalarıyla geri dönersin. Ardından o dosyaların "derinliğine" dalarsın.</p>
+ <div class="slide"><svg viewBox="0 0 960 200" aria-hidden="true"><path d="M20 20 C 300 20, 330 160, 520 150 S 820 30, 940 110" fill="none" stroke="#7fe4ff66" stroke-width="30" stroke-linecap="round"/><path d="M20 20 C 300 20, 330 160, 520 150 S 820 30, 940 110" fill="none" stroke="#ffffff55" stroke-width="2" stroke-dasharray="6 10"/></svg><div class="pkt">GET</div></div>
+ <div class="route"><div class="node"><b>Tarayıcın</b>"sayfayı ver" der</div><div class="node"><b>DNS</b>adı adrese çevirir</div><div class="node"><b>Sunucu</b>dosyaları gönderir</div><div class="node"><b>Sayfa</b>ekranında birleşir</div></div></section>
+
+<section class="wrap" style="position:relative"><small class="k">2 · DALIŞ</small><h2>Derinlik = web katmanı. Hikâye = Kemer'de o gün</h2><p>Dalarken sol tarafta bir web dersi, sağ tarafta senin Kemer'deki gerçek dalış anın akar. Derinleştikçe ikisi birleşir.</p>
+ <div style="position:relative;padding-left:22px;margin-top:26px"><div class="gauge"></div>
+  <div class="stop"><div class="depth">0 m<small>YÜZEY</small></div>
+   <div class="card web"><span class="lab">WEB DERSİ</span><h3>HTML: iskelet</h3><p>Suya inerken ilk gördüğün şey yapıdır: başlık, paragraf, bağlantı. <code>&lt;h1&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;a&gt;</code></p></div>
+   <div class="card kemer"><span class="lab">KEMER'DE O GÜN</span><h3>Suya iniş</h3><p>Antalya'nın Kemer ilçesinde tüplü dalışa başlıyorsun. Deniz sakin, ilk nefesler.</p></div></div>
+  <div class="stop"><div class="depth">5 m<small>RENKLER</small></div>
+   <div class="card web"><span class="lab">WEB DERSİ</span><h3>CSS: giysi</h3><p>Işık ve renkler görünür olur. Aynı balık, farklı <code>color</code> ile farklı görünür.</p></div>
+   <div class="card kemer"><span class="lab">KEMER'DE O GÜN</span><h3>Balıklar</h3><p>Çevrende balıklar var. Balıklara çok yakınsın, hepsi senin etrafında dönüyor.</p></div></div>
+  <div class="stop"><div class="depth">10 m<small>HAREKET</small></div>
+   <div class="card web"><span class="lab">WEB DERSİ</span><h3>JavaScript: hareket</h3><p>Hareket eden her şey bir koddur. Bir balığa dokununca ne olacağını <code>onclick</code> belirler.</p></div>
+   <div class="card kemer"><span class="lab">KEMER'DE O GÜN</span><h3>Aynı gün ikinci dalış</h3><p>Aynı gün içinde iki kez daldın. İkinci dalışta kendine güvenin artık daha fazla.</p></div></div>
+  <div class="stop"><div class="depth">15 m<small>SUNUCU · VERİ</small></div>
+   <div class="card web"><span class="lab">WEB DERSİ</span><h3>Hata ayıklama</h3><p>Derinde, sunucu tarafında bir şey ters gidebilir. Panik yok: önce hatayı oku, sonra çöz.<br><span class="bug" id="bug">ERROR 500: ayağın takıldı!</span></p></div>
+   <div class="card kemer"><span class="lab">KEMER'DE O GÜN · PANİK ANI</span><h3>Ayağın takıldı</h3><p>Bir an panikledin. Çözüm: sakin kal, nefes al. Dene:</p>
+    <div class="breathe"><div class="ring" id="ring">🫧</div><button id="br">Nefes al (4 sn)</button></div></div></div>
+  <div class="stop"><div class="depth">0 m<small>YÜZEYE ÇIK</small></div>
+   <div class="card web" style="grid-column:2/4;text-align:center;border-top-color:#5fe0a8"><span class="lab" style="color:#5fe0a8">TAMAMLANDI</span><h3>Bir sayfanın nasıl geldiğini öğrendin</h3><p>İstek → sunucu → HTML, CSS, JS → ekranın. Ve hata çıkınca sakin kalmayı. Rozetin hazır: <b>Derin Dalgıç</b></p></div></div>
+ </div>
+ <span class="fish" style="top:180px">🐟</span><span class="fish" style="top:520px;animation-delay:-6s">🐠</span><span class="bub" style="left:10%;animation-delay:0s"></span><span class="bub" style="left:60%;animation-delay:-3s"></span><span class="bub" style="left:85%;animation-delay:-6s"></span>
+</section>
+<script>
+const r=document.getElementById('ring'),b=document.getElementById('br'),bug=document.getElementById('bug');let n=0;
+b.onclick=()=>{r.classList.add('in');b.disabled=true;b.textContent='Nefes al… tut…';setTimeout(()=>{r.classList.remove('in');n++;b.disabled=false;b.textContent=n<2?'Nefes ver (tekrar)':'Sakinsin';if(n>=2){bug.textContent='✔ hata çözüldü: sakin kaldın';bug.className='bug ok'}},4000)}
+</script>

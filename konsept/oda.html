@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Konsept: Berat'ın Odası</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#07050a;font:15px system-ui,sans-serif;color:#fff}
+.scene{position:fixed;inset:0;perspective:900px;perspective-origin:50% 42%;overflow:hidden}
+.cam{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateY(var(--ry,0deg)) rotateX(var(--rx,0deg)) translate3d(0,var(--bob,0),var(--z,0));transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+.wall{position:absolute;left:50%;top:50%;width:150vw;height:150vh;margin:-75vh 0 0 -75vw;transform:translateZ(-420px);background:
+ radial-gradient(ellipse 40% 50% at 50% 62%,#ffb36a33,transparent 70%),linear-gradient(#17101f,#241528 60%,#1a0f18)}
+.desk{position:absolute;left:0;right:0;top:63%;bottom:0;background:linear-gradient(#5a3a26,#2e1b12 40%,#1b100b);box-shadow:0 -20px 60px #000a inset}
+.desk::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:#8a5a3a}
+.hs{position:absolute;cursor:pointer;transition:filter .3s,transform .4s}
+.hs::after{content:attr(data-l);position:absolute;left:50%;bottom:100%;transform:translate(-50%,-8px) scale(.9);white-space:nowrap;padding:.35rem .8rem;border-radius:999px;background:#fff;color:#111;font:700 13px system-ui;opacity:0;transition:.25s;pointer-events:none}
+.hs:hover{filter:brightness(1.25) drop-shadow(0 0 22px #ffcf8a);transform:scale(1.03)}.hs:hover::after{opacity:1;transform:translate(-50%,-12px)}
+/* pencere */
+.win{left:6%;top:14%;width:26%;height:42%;border:10px solid #2b2030;border-radius:6px;background:url(../assets/img/gallery/g11.jpg) center 62%/cover;box-shadow:0 0 80px #6a7cff44,inset 0 0 40px #000a}
+.win::before,.win::after{content:"";position:absolute;background:#2b2030}.win::before{left:50%;top:0;bottom:0;width:8px}.win::after{top:50%;left:0;right:0;height:8px}
+/* pano */
+.board{left:66%;top:12%;width:27%;height:44%;background:#6b4a33;border:8px solid #3c2a1f;border-radius:6px;box-shadow:0 10px 40px #000a}
+.pol{position:absolute;background:#f4efe6;padding:6px 6px 22px;box-shadow:0 6px 16px #0008}.pol img{display:block;width:100%;height:100%;object-fit:cover}
+.pol.a{left:8%;top:10%;width:38%;height:56%;transform:rotate(-5deg)}.pol.b{left:52%;top:26%;width:38%;height:50%;transform:rotate(6deg)}.pol.c{left:30%;top:60%;width:34%;height:34%;transform:rotate(-2deg)}
+.pin{position:absolute;width:10px;height:10px;border-radius:50%;background:#ff4a3a;top:6px;left:50%}
+/* monitör */
+.mon{left:34%;top:25%;width:32%;height:36%;background:#0b0b10;border:10px solid #1b1b24;border-radius:10px;box-shadow:0 0 90px #6ab7ff55;overflow:hidden}
+.mon::before{content:"";position:absolute;left:50%;top:100%;width:16%;height:40%;background:#1b1b24;transform:translateX(-50%)}
+.slides{position:absolute;inset:0}.slides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0;animation:sl 15s infinite}
+.slides img:nth-child(2){animation-delay:3s}.slides img:nth-child(3){animation-delay:6s}.slides img:nth-child(4){animation-delay:9s}.slides img:nth-child(5){animation-delay:12s}
+@keyframes sl{0%{opacity:0;transform:scale(1.08)}6%,20%{opacity:1;transform:scale(1)}26%,100%{opacity:0}}
+.mon i{position:absolute;inset:0;background:linear-gradient(transparent 50%,#0004 50%);background-size:100% 4px;pointer-events:none}
+/* laptop / telefon / kupa */
+.lap{left:8%;top:62%;width:24%;height:15%;background:#16161d;border-radius:6px 6px 0 0;border:6px solid #2a2a35;transform:rotate(-3deg)}
+.lap b{position:absolute;left:8%;font:12px ui-monospace,monospace;color:#7dffb0;white-space:nowrap}.lap::after{left:50%}
+.ph{left:70%;top:72%;width:8%;height:16%;background:#0d0d12;border:4px solid #2a2a35;border-radius:12px;transform:rotate(8deg);box-shadow:0 0 40px #5ee1ff55}
+.ph span{position:absolute;inset:6px;border-radius:8px;background:linear-gradient(160deg,#2b6bff,#9b5bff);display:grid;place-items:center;font-size:26px;animation:buzz 2.4s infinite}
+@keyframes buzz{0%,86%,100%{transform:none}90%{transform:translateX(-3px) rotate(-3deg)}94%{transform:translateX(3px) rotate(3deg)}}
+.ph em{position:absolute;right:-6px;top:-6px;width:18px;height:18px;border-radius:50%;background:#ff3b30;font:700 11px/18px system-ui;text-align:center;font-style:normal}
+/* ön plan: kahve, nefes, göz kırpma */
+.cup{position:fixed;right:5%;bottom:-3%;width:20vmin;z-index:5;pointer-events:none;filter:drop-shadow(0 20px 30px #000)}
+.steam{position:absolute;left:30%;bottom:78%;width:40%;height:60%;pointer-events:none}.steam i{position:absolute;bottom:0;width:6px;height:60%;border-radius:6px;background:linear-gradient(#fff6,transparent);filter:blur(3px);animation:st 3s infinite}
+.steam i:nth-child(2){left:40%;animation-delay:1s}.steam i:nth-child(3){left:80%;animation-delay:2s}@keyframes st{from{transform:translateY(30%) scaleY(.5);opacity:0}30%{opacity:1}to{transform:translateY(-70%) scaleY(1.2);opacity:0}}
+.vig{position:fixed;inset:0;pointer-events:none;z-index:4;background:radial-gradient(ellipse 75% 70% at 50% 45%,transparent 45%,#000d 100%)}
+.lid{position:fixed;left:0;right:0;height:51%;background:#000;z-index:20;pointer-events:none}.lid.t{top:0;animation:ot 2.6s .3s cubic-bezier(.7,0,.2,1) forwards}.lid.b{bottom:0;animation:ob 2.6s .3s cubic-bezier(.7,0,.2,1) forwards}
+@keyframes ot{0%{height:51%}20%{height:30%}35%{height:46%}100%{height:0}}@keyframes ob{0%{height:51%}20%{height:30%}35%{height:46%}100%{height:0}}
+.hud{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:6;display:flex;gap:.3rem;padding:.3rem;border-radius:999px;background:#ffffff14;border:1px solid #fff3;backdrop-filter:blur(10px);font:600 13px system-ui}.hud a{padding:.4rem .8rem;border-radius:999px;color:#eee;text-decoration:none}.hud a:hover{background:#fff3}
+.say{position:fixed;left:50%;bottom:7%;transform:translateX(-50%);z-index:6;text-align:center;text-shadow:0 2px 12px #000;pointer-events:none}.say h1{margin:0;font-size:clamp(1.6rem,5vw,3.4rem);letter-spacing:.04em}.say p{margin:.2rem 0 0;font:12px ui-monospace,monospace;color:#cbb}
+/* monitöre girince */
+.inside{position:fixed;inset:0;z-index:30;background:#05060c;display:none;place-items:center;text-align:center}
+.inside.on{display:grid;animation:fi .8s both}@keyframes fi{from{opacity:0;transform:scale(.8)}}
+.inside .row{display:flex;gap:1rem;overflow:auto;padding:1rem;max-width:96vw;perspective:900px}.inside .row img{height:56vh;border-radius:12px;border:1px solid #5ee1ff55;transition:transform .4s;flex:none}.inside .row img:hover{transform:translateZ(60px) rotateY(-6deg) scale(1.05)}
+.inside button{position:absolute;top:1rem;left:1rem;background:#fff2;color:#fff;border:1px solid #fff4;border-radius:999px;padding:.5rem 1rem;cursor:pointer}
+</style></head><body>
+<div class="scene" id="scene"><div class="cam" id="cam"><div class="wall">
+  <div class="hs win" data-l="Galeri · pencereden manzara"></div>
+  <div class="hs board" data-l="Hakkımda · pano"><div class="pol a"><i class="pin"></i><img src="../assets/img/portrait.jpg" alt=""></div><div class="pol b"><i class="pin"></i><img src="../assets/img/gallery/g8.jpg" alt=""></div><div class="pol c"><i class="pin"></i><img src="../assets/img/gallery/g13.jpg" alt=""></div></div>
+  <div class="desk"></div>
+  <div class="hs mon" id="mon" data-l="Projeler · içine gir ▸"><div class="slides"><img src="../assets/img/projects/p1.jpg" alt=""><img src="../assets/img/projects/p2.jpg" alt=""><img src="../assets/img/projects/p3.jpg" alt=""><img src="../assets/img/projects/p4.jpg" alt=""><img src="../assets/img/projects/p5.jpg" alt=""></div><i></i></div>
+  <div class="hs lap" data-l="Blog · laptop"><b style="top:14%">$ git commit -m "ilk yazı"</b><b style="top:38%">&lt;h1&gt;Merhaba&lt;/h1&gt;</b><b style="top:62%">fetch('/api/blog')</b></div>
+  <div class="hs ph" data-l="İletişim · telefon"><span>✉</span><em>1</em></div>
+</div></div></div>
+<svg class="cup" viewBox="0 0 120 130"><ellipse cx="60" cy="122" rx="46" ry="7" fill="#0006"/><path d="M18 40h84l-8 78a10 10 0 0 1-10 8H36a10 10 0 0 1-10-8z" fill="#f2ece2"/><path d="M20 52h80l-2 14H22z" fill="#2c1b12"/><text x="60" y="100" text-anchor="middle" font-size="16" font-weight="700" fill="#2c1b12" font-family="system-ui">COFFY</text><ellipse cx="60" cy="40" rx="42" ry="9" fill="#6b4630"/></svg>
+<div class="steam" style="right:6%;bottom:14%;left:auto;width:6vmin"><i></i><i></i><i></i></div>
+<div class="vig"></div><div class="lid t"></div><div class="lid b"></div>
+<nav class="hud"><a>Ana sayfa</a><a>Hakkımda</a><a>Projeler</a><a>Blog</a><a>Galeri</a><a>İletişim</a><a>TR | EN</a></nav>
+<div class="say"><h1>Berat Yanardağ</h1><p>gece 02:14 · masanın başındasın · bir şeye dokun</p></div>
+<div class="inside" id="in"><button id="out">← Odaya dön</button><div><h2>Grafik Animasyon 1</h2><div class="row"><img src="../assets/img/projects/p1.jpg" alt=""><img src="../assets/img/projects/p2.jpg" alt=""><img src="../assets/img/projects/p3.jpg" alt=""><img src="../assets/img/projects/p4.jpg" alt=""><img src="../assets/img/projects/p5.jpg" alt=""></div></div></div>
+<script>
+const cam=document.getElementById('cam');let mx=0,my=0,t=0;
+addEventListener('pointermove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5;cam.style.setProperty('--ry',(-mx*9)+'deg');cam.style.setProperty('--rx',(my*5)+'deg')});
+(function loop(){t+=.016;cam.style.setProperty('--bob',Math.sin(t*1.3)*3+'px');requestAnimationFrame(loop)})();
+document.getElementById('mon').onclick=()=>{cam.style.setProperty('--z','330px');setTimeout(()=>document.getElementById('in').classList.add('on'),750)};
+document.getElementById('out').onclick=()=>{document.getElementById('in').classList.remove('on');cam.style.setProperty('--z','0px')};
+</script></body></html>

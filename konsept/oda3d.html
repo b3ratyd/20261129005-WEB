@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Konsept: Uyan ve Gez</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#fff;font:15px system-ui,sans-serif;user-select:none;touch-action:none}
+canvas{position:fixed;inset:0;display:block;cursor:grab}
+.lbl{position:fixed;left:0;top:0;transform:translate(-50%,-50%);padding:.4rem .9rem;border-radius:999px;background:#fffffff0;color:#15101a;font:700 13px system-ui;white-space:nowrap;box-shadow:0 6px 24px #0007;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s,transform .2s;z-index:6}
+.lbl.on{opacity:1;pointer-events:auto}.lbl:hover{transform:translate(-50%,-50%) scale(1.08)}.lbl small{display:block;font:500 10px system-ui;opacity:.6}
+.vig{position:fixed;inset:0;pointer-events:none;z-index:4;background:radial-gradient(ellipse 80% 75% at 50% 50%,transparent 55%,#0009 100%)}
+.lid{position:fixed;left:0;right:0;height:50.5%;background:#000;z-index:20;pointer-events:none}.lid.t{top:0;animation:ot 5.5s .4s cubic-bezier(.7,0,.2,1) forwards}.lid.b{bottom:0;animation:ot 5.5s .4s cubic-bezier(.7,0,.2,1) forwards}
+@keyframes ot{0%{height:50.5%}12%{height:50.5%}22%{height:24%}30%{height:42%}42%{height:50.5%}52%{height:10%}62%{height:30%}78%{height:0}100%{height:0}}
+#msg{position:fixed;left:50%;top:14%;transform:translateX(-50%);z-index:21;font:italic 300 clamp(1.2rem,3.5vw,2rem)/1.3 Georgia,serif;text-align:center;text-shadow:0 2px 16px #000;opacity:0;animation:msg 6s .5s both;pointer-events:none}
+@keyframes msg{0%{opacity:0}25%,60%{opacity:1}100%{opacity:0}}
+.hud{position:fixed;left:1rem;top:1rem;z-index:6;font:12px ui-monospace,monospace;color:#ffe8cc;text-shadow:0 1px 6px #000;line-height:1.7}
+.nav{position:fixed;top:.9rem;right:1rem;z-index:6;display:flex;gap:.3rem;padding:.3rem;border-radius:999px;background:#0006;border:1px solid #fff3;backdrop-filter:blur(10px);font:600 13px system-ui}.nav span{padding:.35rem .75rem;border-radius:999px;color:#eee}.nav .c{background:#fff;color:#111}
+#prompt{position:fixed;left:50%;bottom:12%;transform:translateX(-50%);z-index:6;padding:.55rem 1.1rem;border-radius:999px;background:#0008;border:1px solid #fff5;backdrop-filter:blur(8px);font:600 14px system-ui;opacity:0;transition:.3s;pointer-events:none}
+#card{position:fixed;right:1.2rem;bottom:1.2rem;width:min(24rem,calc(100vw - 2.4rem));z-index:8;padding:1.2rem;border-radius:1.2rem;background:#14101ad8;border:1px solid #ffcf8a55;backdrop-filter:blur(14px);display:none}
+#card h2{margin:0 0 .4rem;font-size:1.6rem}#card p{margin:.3rem 0 .8rem;color:#e8dccd}#card button{border:0;border-radius:999px;padding:.55rem 1rem;font:700 13px system-ui;cursor:pointer;margin-right:.4rem}#card .go{background:linear-gradient(135deg,#ff8a3d,#ffb86b);color:#2a1408}#card .bk{background:#fff2;color:#fff}
+#fwd{display:none;position:fixed;left:50%;bottom:1.2rem;transform:translateX(-50%);width:80px;height:80px;border-radius:50%;border:2px solid #fff6;background:#fff2;color:#fff;font-size:26px;z-index:7}@media(pointer:coarse){#fwd{display:block}}
+</style></head><body>
+<div class="vig"></div><div class="lid t"></div><div class="lid b"></div><div id="msg">uyan, Berat…<br>güne başlıyoruz.</div>
+<div class="hud">W A S D / ok tuşları: yürü<br>sürükle: etrafa bak<br>E ya da etikete tıkla: gir</div>
+<div class="nav"><span class="c">Ana sayfa</span><span>TR | EN</span></div><div id="prompt"></div><button id="fwd">▲</button>
+<div id="card"><h2></h2><p></p><button class="go">Sayfayı aç →</button><button class="bk">← Odaya dön</button></div>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+const $=s=>document.querySelector(s),V=(x,y,z)=>new THREE.Vector3(x,y,z);
+const R=new THREE.WebGLRenderer({antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,2));R.setSize(innerWidth,innerHeight);
+R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.15;document.body.prepend(R.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0xf2d9b8);scene.fog=new THREE.Fog(0xe9cfae,9,22);
+const cam=new THREE.PerspectiveCamera(74,innerWidth/innerHeight,.05,40);cam.rotation.order='YXZ';
+addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();R.setSize(innerWidth,innerHeight)});
+const TL=new THREE.TextureLoader(),tex=u=>{const t=TL.load('../assets/img/'+u);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t};
+const canvasTex=(w,h,fn,rep)=>{const c=document.createElement('canvas');c.width=w;c.height=h;fn(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;if(rep){t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(...rep)}return t};
+const M=(c,r=.8,m=0)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});
+const add=(g,m,x,y,z,o={})=>{const k=new THREE.Mesh(g,m);k.position.set(x,y,z);k.castShadow=o.cast!==false;k.receiveShadow=true;if(o.r)k.rotation.set(...o.r);scene.add(k);return k};
+const RB=(w,h,d,c,x,y,z,rad=.04,o={})=>add(new RoundedBoxGeometry(w,h,d,5,rad),typeof c==='object'?c:M(c,o.rough??.8),x,y,z,o);
+/* ---- ODA ---- */
+const wallM=M(0xe8d3bd,.95),W=4,D=3.5,H=3;
+const plane=(w,h,m,x,y,z,r)=>{const p=add(new THREE.PlaneGeometry(w,h),m,x,y,z,{r,cast:false});return p};
+const floorT=canvasTex(1024,1024,(x,w,h)=>{for(let i=0;i<8;i++){x.fillStyle=`hsl(28,${38+Math.random()*10}%,${40+Math.random()*10}%)`;x.fillRect(0,i*128,w,126);for(let j=0;j<70;j++){x.fillStyle=`rgba(60,30,10,${Math.random()*.12})`;x.fillRect(Math.random()*w,i*128+Math.random()*126,40+Math.random()*180,1.5)}x.fillStyle='#3b2212';x.fillRect(Math.floor(Math.random()*w),i*128,3,126);x.fillStyle='#2a170b';x.fillRect(0,i*128+126,w,2)}},[2,1.7]);
+plane(2*W,2*D,new THREE.MeshStandardMaterial({map:floorT,roughness:.55}),0,0,0,[-Math.PI/2,0,0]);
+plane(2*W,2*D,M(0xf6ede2,1),0,H,0,[Math.PI/2,0,0]);
+plane(2*W,H,wallM,0,H/2,-D,[0,0,0]);plane(2*W,H,wallM,0,H/2,D,[0,Math.PI,0]);plane(2*D,H,wallM,-W,H/2,0,[0,Math.PI/2,0]);plane(2*D,H,wallM,W,H/2,0,[0,-Math.PI/2,0]);
+const bb=M(0xfaf3ea,.6);[[0,.09,-D+.02,2*W,.18,.04],[0,.09,D-.02,2*W,.18,.04],[-W+.02,.09,0,.04,.18,2*D],[W-.02,.09,0,.04,.18,2*D]].forEach(a=>add(new THREE.BoxGeometry(a[3],a[4],a[5]),bb,a[0],a[1],a[2],{cast:false}));
+/* halı */ add(new THREE.CircleGeometry(1.5,64),M(0x4f8f8a,1),.2,.012,.3,{r:[-Math.PI/2,0,0],cast:false});add(new THREE.RingGeometry(1.2,1.32,64),M(0xf3d9a8,1),.2,.014,.3,{r:[-Math.PI/2,0,0],cast:false});
+/* yatak */
+RB(2.1,.32,3.1,0x7a5236,-3,.2,-1.95,.05);RB(1.95,.28,2.95,0xf3eee6,-3,.48,-1.95,.1,{rough:1});
+RB(2.0,.2,2.0,0x6d8fb8,-3,.66,-1.1,.1,{rough:1}).rotation.z=.02;RB(2.02,.1,.5,0xf5f0e8,-3,.76,-0.2,.05,{rough:1});
+[-3.5,-2.5].forEach(x=>{const p=add(new THREE.SphereGeometry(.5,32,20),M(0xfdfaf4,1),x,.78,-3.0);p.scale.set(.95,.3,.7)});RB(2.1,1.0,.12,0x7a5236,-3,.7,-3.44,.04);
+/* komodin + lamba + telefon */
+RB(.55,.6,.5,0x9b6a45,-1.7,.3,-3.2,.04);add(new THREE.CylinderGeometry(.06,.09,.28,16),M(0xd9b98a,.4,.4),-1.7,.74,-3.2);
+const shade=add(new THREE.CylinderGeometry(.14,.2,.24,24,1,true),new THREE.MeshStandardMaterial({color:0xffd9a0,emissive:0xffb35a,emissiveIntensity:1.4,side:THREE.DoubleSide}),-1.7,1.0,-3.2,{cast:false});
+const lamp=new THREE.PointLight(0xffb366,3.5,7);lamp.position.set(-1.7,1.0,-3.2);scene.add(lamp);
+const phoneM=new THREE.MeshStandardMaterial({color:0x0e0e14,emissive:0x4a7bff,emissiveIntensity:.9,roughness:.3});RB(.09,.012,.19,0x15151c,-1.52,.616,-3.05,.01);const phone=add(new THREE.PlaneGeometry(.08,.17),phoneM,-1.52,.623,-3.05,{r:[-Math.PI/2,0,0],cast:false});
+/* masa + monitör */
+RB(2.7,.06,.9,0xc79a6b,1.9,.76,-3.05,.02,{rough:.5});[[.6,.2],[3.15,.2],[.6,.8],[3.15,.8]].forEach(a=>RB(.06,.74,.06,0x7a5a3d,a[0]+.0,.37,-3.4+(a[1]-.2)*.8,.01));
+RB(1.0,.58,.04,0x15151c,1.9,1.3,-3.3,.02,{rough:.4});RB(.08,.22,.08,0x15151c,1.9,.96,-3.3,.01);RB(.4,.03,.2,0x15151c,1.9,.8,-3.2,.01);
+const scr=document.createElement('canvas');scr.width=640;scr.height=360;const sx=scr.getContext('2d'),scT=new THREE.CanvasTexture(scr);scT.colorSpace=THREE.SRGBColorSpace;
+const monM=new THREE.MeshBasicMaterial({map:scT,toneMapped:false});add(new THREE.PlaneGeometry(.92,.5),monM,1.9,1.3,-3.275,{cast:false});
+const imgs=[1,2,3,4,5].map(i=>{const im=new Image();im.src=`../assets/img/projects/p${i}.jpg`;return im});let si=0;
+const drawScr=()=>{const im=imgs[si%5];sx.fillStyle='#0b0b12';sx.fillRect(0,0,640,360);if(im.complete&&im.naturalWidth){const s=Math.max(640/im.naturalWidth,360/im.naturalHeight);sx.drawImage(im,(640-im.naturalWidth*s)/2,0,im.naturalWidth*s,im.naturalHeight*s)}scT.needsUpdate=true};setInterval(()=>{si++;drawScr()},3000);setTimeout(drawScr,600);
+const monL=new THREE.PointLight(0x7ab8ff,1.2,3);monL.position.set(1.9,1.3,-2.6);scene.add(monL);
+RB(.09,.1,.09,0xf6f0e6,2.7,.84,-2.85,.03,{rough:.3});add(new THREE.CylinderGeometry(.045,.04,.09,20),M(0xf6f0e6,.3),2.55,.84,-2.8);/* kupa */
+/* laptop */
+RB(.42,.015,.3,0xb9bcc4,2.95,.8,-3.0,.005,{rough:.3,m:1}).rotation.y=-.35;const lt=RB(.42,.28,.012,0x2a2c33,2.88,.93,-3.15,.005);lt.rotation.set(-.25,-.35,0);
+const lcan=canvasTex(256,170,(x,w,h)=>{x.fillStyle='#0f1420';x.fillRect(0,0,w,h);x.fillStyle='#7dffb0';x.font='11px monospace';['$ git commit -m "ilk yazı"','<h1>Merhaba</h1>','fetch("/api/blog")','// blog yazıları'].forEach((s,i)=>x.fillText(s,10,24+i*22))});
+const ls=add(new THREE.PlaneGeometry(.38,.24),new THREE.MeshBasicMaterial({map:lcan,toneMapped:false}),2.885,.93,-3.139,{cast:false});ls.rotation.set(-.25,-.35,0);
+/* sandalye */
+RB(.5,.08,.5,0x3b6f7a,1.9,.5,-2.3,.04);RB(.5,.5,.07,0x3b6f7a,1.9,.8,-2.05,.04);add(new THREE.CylinderGeometry(.03,.03,.42,10),M(0x222222,.4,.8),1.9,.25,-2.3);add(new THREE.CylinderGeometry(.28,.28,.04,20),M(0x222222,.4,.8),1.9,.03,-2.3);
+/* pano + polaroidler */
+RB(1.5,1.0,.05,0xb98a5a,-.2,1.65,-D+.03,.02,{rough:1});
+[['portrait.jpg',-.55,1.7,.4,.5,.06],['gallery/g8.jpg',.1,1.55,.38,.48,-.07],['gallery/g13.jpg',-.25,1.3,.3,.26,.03],['gallery/g3.jpg',.15,1.9,.28,.36,-.04]].forEach(a=>{const g=new THREE.Group();g.position.set(a[1],a[2],-D+.07);g.rotation.z=a[5];const f=new THREE.Mesh(new THREE.PlaneGeometry(a[3]-.02,a[4]-.04),new THREE.MeshBasicMaterial({map:tex(a[0]),toneMapped:false}));const bg=new THREE.Mesh(new THREE.PlaneGeometry(a[3]+.04,a[4]+.1),M(0xf6f1e7,.9));bg.position.z=-.001;f.position.set(0,.02,0);g.add(bg,f);g.children.forEach(c=>c.receiveShadow=true);scene.add(g);add(new THREE.SphereGeometry(.012),M(0xff4a3a),a[1],a[2]+a[4]/2+.01,-D+.08,{cast:false})});
+/* raf + kitaplar + bitki */
+RB(1.6,.04,.22,0x9b6a45,1.9,1.95,-D+.14,.01);const bc=[0xc0554a,0x4a7fc0,0xe0b84a,0x5aa07a,0x8a5ab0,0xd98a4a];for(let i=0;i<9;i++){const h=.22+Math.random()*.08;RB(.05+Math.random()*.02,h,.15,bc[i%6],1.3+i*.075,1.97+h/2,-D+.14,.005)}
+add(new THREE.CylinderGeometry(.09,.07,.14,18),M(0xd98a4a,.7),2.5,2.04,-D+.15);for(let i=0;i<6;i++){const l=add(new THREE.SphereGeometry(.07,10,8),M(0x4e9a5a,.7),2.5+Math.cos(i*1.05)*.06,2.2+Math.random()*.05,-D+.15+Math.sin(i*1.05)*.05);l.scale.set(.6,1.8,.6)}
+add(new THREE.CylinderGeometry(.22,.17,.4,22),M(0xcf8e5a,.7),3.45,.2,-2.9);for(let i=0;i<10;i++){const l=add(new THREE.SphereGeometry(.16,14,10),M(0x3f8f50,.65),3.45+Math.cos(i*.9)*.2,.7+(i%4)*.18,-2.9+Math.sin(i*.9)*.2);l.scale.set(.5,1.7,.3);l.rotation.z=Math.cos(i)*.5}
+/* komot + galeri çerçeveleri (ön duvar) */
+RB(2.0,.8,.5,0xa0724c,0,.4,D-.3,.04);const gal=['g11','g6','g12','g10','g2'];
+gal.forEach((g,i)=>{const x=-1.6+i*.8,w=.5,h=.65;RB(w+.08,h+.08,.04,0x2a1f1a,x,1.6,D-.04,.01);const f=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tex(`gallery/${g}.jpg`),toneMapped:false}));f.position.set(x,1.6,D-.065);f.rotation.y=Math.PI;scene.add(f)});
+/* pencere (sağ duvar) */
+const wy=1.7,wz=.4;add(new THREE.PlaneGeometry(2.2,1.5),new THREE.MeshBasicMaterial({map:tex('gallery/g8.jpg'),toneMapped:false}),W-.02,wy,wz,{r:[0,-Math.PI/2,0],cast:false});
+const fm=M(0xf5efe6,.5);[[0,.75,2.3,.08],[0,-.75,2.3,.08]].forEach(a=>RB(.08,a[3],a[2],fm,W-.06,wy+a[1],wz,.01));[[-1.1],[1.1],[0]].forEach(a=>RB(.08,1.6,.08,fm,W-.06,wy,wz+a[0],.01));RB(.08,.06,2.3,fm,W-.06,wy,wz,.01);
+[[-1.25],[1.25]].forEach(a=>RB(.14,2.3,.5,0xd7867a,W-.2,1.45,wz+a[0]*1.0,.07,{rough:1}));
+const sun=new THREE.SpotLight(0xffd7a0,320,18,.62,.75,1.4);sun.position.set(7.5,3.4,wz);sun.target.position.set(-1,0,wz);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.bias=-.0004;scene.add(sun,sun.target);
+scene.add(new THREE.HemisphereLight(0xffe7c8,0x8a6a5a,.9));
+/* ışık içinde uçuşan toz */
+const N=180,pp=new Float32Array(N*3);for(let i=0;i<N;i++)pp.set([W-.3-Math.random()*4.2,.6+Math.random()*2,wz-1+Math.random()*2],i*3);
+const dg=new THREE.BufferGeometry();dg.setAttribute('position',new THREE.BufferAttribute(pp,3));const dust=new THREE.Points(dg,new THREE.PointsMaterial({size:.03,color:0xfff0c8,transparent:true,opacity:.7,blending:THREE.AdditiveBlending,depthWrite:false}));scene.add(dust);
+/* ---- ETKİLEŞİM NOKTALARI ---- */
+const HS=[{n:'Projeler',s:'Grafik Animasyon 1',p:V(1.9,1.75,-3.1),f:V(1.9,1.35,-2.0),l:V(1.9,1.3,-3.3),d:'Monitörün içine gir: Grafik Animasyon I dersindeki 5 çalışman burada.'},
+{n:'Hakkımda',s:'pano',p:V(-.2,2.35,-3.3),f:V(-.2,1.6,-2.0),l:V(-.2,1.6,-3.5),d:'Özgeçmişin, vesikalığın, ders programın ve yeteneklerin.'},
+{n:'Galeri',s:'çerçeveler',p:V(0,2.3,3.2),f:V(0,1.6,1.8),l:V(0,1.6,3.5),d:'Seni anlatan fotoğraflar duvarda asılı.'},
+{n:'Blog',s:'laptop',p:V(2.9,1.35,-3.0),f:V(2.55,1.45,-1.95),l:V(2.88,.95,-3.1),d:'IT yazıların ekran görüntüleriyle laptopta.'},
+{n:'İletişim',s:'telefon',p:V(-1.52,1.05,-3.05),f:V(-1.35,1.3,-2.2),l:V(-1.52,.62,-3.05),d:'Adres, telefon, e-posta ve mesaj formu. Telefon titriyor!'}];
+HS.forEach(h=>{const d=document.createElement('div');d.className='lbl';d.innerHTML=`${h.n}<small>${h.s}</small>`;document.body.appendChild(d);h.el=d;d.onclick=()=>focus(h);
+ h.m=new THREE.Mesh(new THREE.SphereGeometry(.035,12,12),new THREE.MeshBasicMaterial({color:0xffe08a,toneMapped:false}));h.m.position.copy(h.p).setY(h.p.y-.12);scene.add(h.m)});
+/* ---- KONTROL / UYANMA ---- */
+let yaw=Math.PI,pitch=1.35,px=-3,py=.95,pz=-2.6,drag=false,lx=0,ly=0,moved=0,t=0,ctrl=false,foc=null,card=$('#card');const K={};
+const sm=(a,b,x)=>{x=Math.max(0,Math.min(1,(x-a)/(b-a)));return x*x*(3-2*x)};const lerp=(a,b,k)=>a+(b-a)*k;
+R.domElement.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;moved=0});addEventListener('pointerup',()=>drag=false);
+addEventListener('pointermove',e=>{if(!drag||!ctrl||foc)return;moved+=1;yaw-=(e.clientX-lx)*.005;pitch=Math.max(-1.3,Math.min(1.3,pitch-(e.clientY-ly)*.005));lx=e.clientX;ly=e.clientY});
+addEventListener('keydown',e=>{K[e.code]=1;if(e.code==='KeyE'&&ctrl&&!foc){const n=nearest();if(n.h&&n.d<2.6)focus(n.h)}});addEventListener('keyup',e=>K[e.code]=0);
+$('#fwd').onpointerdown=()=>K.Fwd=1;$('#fwd').onpointerup=()=>K.Fwd=0;
+const nearest=()=>{let b={h:null,d:99};HS.forEach(h=>{const d=Math.hypot(px-h.p.x,pz-h.p.z);if(d<b.d)b={h,d}});return b};
+const OB=[[-4,-2,-3.5,-.4],[.5,3.2,-3.5,-2.7],[-2,-1.4,-3.5,-2.8],[-1,1,2.7,3.5],[3.1,3.8,-3.5,-2.4]];
+const blocked=(x,z)=>x<-W+.35||x>W-.35||z<-D+.35||z>D-.35||OB.some(o=>x>o[0]-.25&&x<o[1]+.25&&z>o[2]-.25&&z<o[3]+.25);
+function focus(h){foc={h,from:{x:px,y:py,z:pz,yaw,pitch},t:0};const d=h.l.clone().sub(h.f);foc.to={x:h.f.x,y:h.f.y,z:h.f.z,yaw:Math.atan2(-d.x,-d.z),pitch:Math.asin(d.normalize().y)};card.querySelector('h2').textContent=h.n;card.querySelector('p').textContent=h.d}
+card.querySelector('.bk').onclick=()=>{card.style.display='none';if(foc){foc.back=true;foc.t=1}};
+/* ---- DÖNGÜ ---- */
+const clock=new THREE.Clock();
+(function loop(){const dt=Math.min(.05,clock.getDelta());t+=dt;const el=clock.elapsedTime;
+ if(!ctrl){const a=sm(1.5,5.5,t),b=sm(5.2,8.2,t);pitch=lerp(1.35,.28,a);pitch=lerp(pitch,0,b);yaw=lerp(Math.PI,Math.PI+.9,a);yaw=lerp(yaw,Math.PI+.55,b);px=lerp(-3,-1.9,sm(6,8.4,t));pz=lerp(-2.6,-1.0,sm(6,8.4,t));py=lerp(.95,.85,a)+(1.65-.85)*b+Math.sin(el*1.6)*.01*(1-b);if(t>8.4){ctrl=true;py=1.65}}
+ else if(foc){if(!foc.back){foc.t=Math.min(1,foc.t+dt*.9);const k=sm(0,1,foc.t),f=foc.from,o=foc.to;px=lerp(f.x,o.x,k);py=lerp(f.y,o.y,k);pz=lerp(f.z,o.z,k);let dy=o.yaw-f.yaw;dy=Math.atan2(Math.sin(dy),Math.cos(dy));yaw=f.yaw+dy*k;pitch=lerp(f.pitch,o.pitch,k);if(foc.t>=1&&card.style.display!=='block')card.style.display='block'}
+  else{foc.t=Math.max(0,foc.t-dt*1.1);const k=sm(0,1,foc.t),f=foc.from,o=foc.to;px=lerp(f.x,o.x,k);py=lerp(f.y,o.y,k);pz=lerp(f.z,o.z,k);let dy=o.yaw-f.yaw;dy=Math.atan2(Math.sin(dy),Math.cos(dy));yaw=f.yaw+dy*k;pitch=lerp(f.pitch,o.pitch,k);if(foc.t<=0)foc=null}}
+ else{const sp=(K.ShiftLeft?3.4:1.9)*dt,fw=(K.KeyW||K.ArrowUp||K.Fwd?1:0)-(K.KeyS||K.ArrowDown?1:0),rt=(K.KeyD||K.ArrowRight?1:0)-(K.KeyA||K.ArrowLeft?1:0);
+  const vx=(-Math.sin(yaw)*fw+Math.cos(yaw)*rt)*sp,vz=(-Math.cos(yaw)*fw-Math.sin(yaw)*rt)*sp;if(!blocked(px+vx,pz))px+=vx;if(!blocked(px,pz+vz))pz+=vz;
+  py=1.65+(fw||rt?Math.sin(el*9)*.025:Math.sin(el*1.4)*.006)}
+ cam.position.set(px,py,pz);cam.rotation.set(pitch,yaw,0);
+ const ph=el%3<.5?Math.sin(el*60)*.15:0;phoneM.emissiveIntensity=.9+ph+Math.sin(el*3)*.1;shade.material.emissiveIntensity=1.3+Math.sin(el*2.3)*.06;
+ const pa=dg.attributes.position;for(let i=0;i<N;i++){pa.array[i*3+1]+=Math.sin(el+i)*.0006;pa.array[i*3]+=Math.cos(el*.5+i)*.0004;if(pa.array[i*3+1]>2.7)pa.array[i*3+1]=.6}pa.needsUpdate=true;
+ HS.forEach(h=>{const v=h.p.clone().project(cam),d=Math.hypot(px-h.p.x,pz-h.p.z);const on=ctrl&&!foc&&v.z<1&&d<4.8&&Math.abs(v.x)<1.1;h.el.classList.toggle('on',on);h.el.style.left=(v.x*.5+.5)*innerWidth+'px';h.el.style.top=(-v.y*.5+.5)*innerHeight+'px';h.m.scale.setScalar(1+Math.sin(el*4)*.3);h.m.visible=ctrl&&!foc});
+ const n=nearest(),pr=$('#prompt');pr.style.opacity=ctrl&&!foc&&n.d<2.6?1:0;if(n.h)pr.textContent='E · '+n.h.n+' sayfasına gir';
+ R.render(scene,cam);requestAnimationFrame(loop)})();
+</script></body></html>

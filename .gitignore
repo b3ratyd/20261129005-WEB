@@ -1,0 +1,12 @@
+# derleme önbelleği ve geçici dosyalar
+__pycache__/
+*.pyc
+node_modules/
+# yerel Claude ayarları (kişisel)
+.claude/settings.local.json
+# teslim dosyaları (ayrıca hazırlanır)
+*.zip
+*.PDF
+*.docx
+Thumbs.db
+.DS_Store

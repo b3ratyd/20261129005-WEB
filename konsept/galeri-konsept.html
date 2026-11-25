@@ -1,0 +1,72 @@
+<!doctype html><html lang="tr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Galeri konsepti v2 — gelecekten bir sanat odası</title>
+<style>html,body{margin:0;height:100%;background:#05070b;overflow:hidden;font-family:system-ui,sans-serif;color:#dfe8f5}canvas{display:block}#hud{position:fixed;left:0;right:0;bottom:18px;text-align:center;font-size:13px;letter-spacing:.08em;color:#9fb5cc;pointer-events:none}#t{position:fixed;left:24px;top:20px;font:700 12px ui-monospace,monospace;letter-spacing:.2em;color:#9fb5cc}#cap{position:fixed;left:50%;top:80%;transform:translateX(-50%);padding:.6rem 1.2rem;border-radius:12px;background:#0a0f1acc;border:1px solid #ffffff22;backdrop-filter:blur(8px);font-size:15px;opacity:0;transition:.4s}#cap.on{opacity:1}</style>
+<div id="t">KONSEPT v2 — UYGULANMADI</div><div id="cap"></div><div id="hud">Sürükle: bak · W/S ya da ↑/↓ ya da tekerlek: ilerle/geri · bir kareye bakınca başlığı görürsün</div>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+const R=new THREE.WebGLRenderer({antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,1.75));R.setSize(innerWidth,innerHeight);R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=.95;document.body.appendChild(R.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x07090d);scene.fog=new THREE.Fog(0x07090d,12,40);
+const pm=new THREE.PMREMGenerator(R);scene.environment=pm.fromScene(new RoomEnvironment(),.04).texture;scene.environmentIntensity=.35;
+const cam=new THREE.PerspectiveCamera(68,innerWidth/innerHeight,.05,80);
+const HW=4.2,HL=34,HH=4.6,ZC=-HL/2+2;
+const M=(c,r=.6,m=0)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});
+const add=(g,m,x,y,z)=>{const o=new THREE.Mesh(g,m);o.position.set(x,y,z);scene.add(o);return o};
+const radial=(rgb,a)=>{const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d'),g=x.createRadialGradient(64,64,2,64,64,64);g.addColorStop(0,`rgba(${rgb},${a})`);g.addColorStop(.55,`rgba(${rgb},${a*.35})`);g.addColorStop(1,`rgba(${rgb},0)`);x.fillStyle=g;x.fillRect(0,0,128,128);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t};
+const glowM=(t,o=1)=>new THREE.MeshBasicMaterial({map:t,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:o,fog:false});
+const warm=radial('255,226,190',.55),cool=radial('150,200,255',.4);
+/* zemin: koyu cilalı beton, ince yansıma */
+const ft=(()=>{const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d');x.fillStyle='#14171d';x.fillRect(0,0,256,256);for(let i=0;i<900;i++){x.fillStyle=`rgba(255,255,255,${Math.random()*.02})`;x.fillRect(Math.random()*256,Math.random()*256,2,2)}x.strokeStyle='rgba(255,255,255,.05)';x.strokeRect(0,0,256,256);const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(HW,HL/2);t.colorSpace=THREE.SRGBColorSpace;return t})();
+const fl=add(new THREE.PlaneGeometry(HW*2,HL),new THREE.MeshStandardMaterial({map:ft,roughness:.16,metalness:.5,envMapIntensity:1.6}),0,0,ZC);fl.rotation.x=-Math.PI/2;
+/* duvarlar: sıcak, mat galeri beyazı */
+const wallM=new THREE.MeshStandardMaterial({color:0xe6e2db,roughness:.92});
+[-1,1].forEach(s=>{const w=add(new THREE.PlaneGeometry(HL,HH),wallM,s*HW,HH/2,ZC);w.rotation.y=-s*Math.PI/2;
+ add(new THREE.BoxGeometry(.04,.14,HL),M(0x1a1c22,.5,.4),s*(HW-.02),.07,ZC)});   /* süpürgelik */
+add(new THREE.BoxGeometry(HW*2,.1,HL),M(0x15171c,.8),0,HH,ZC);add(new THREE.BoxGeometry(HW*2,HH,.1),wallM,0,HH/2,-HL+2);
+/* tavan: tek ince ışık hattı + yumuşak ışık kutusu */
+add(new THREE.BoxGeometry(.5,.04,HL-1),new THREE.MeshStandardMaterial({color:0,emissive:0xfff1dc,emissiveIntensity:1.5}),0,HH-.07,ZC);
+/* zemin ortasında ince yol çizgisi (cyan) */
+add(new THREE.BoxGeometry(.03,.01,HL-2),new THREE.MeshStandardMaterial({color:0,emissive:0x7fe4ff,emissiveIntensity:1.4}),0,.012,ZC);
+/* karşı duvar başlığı: ince, büyük, zarif */
+const title=(()=>{const c=document.createElement('canvas');c.width=1024;c.height=512;const x=c.getContext('2d');x.clearRect(0,0,1024,512);x.textAlign='center';x.fillStyle='#2a2a2e';x.font='300 130px Georgia,serif';x.fillText('Kare Kare',512,250);x.fillStyle='#b8955a';x.fillRect(452,280,120,4);x.fillStyle='#55555c';x.font='italic 38px Georgia,serif';x.fillText('Berat Yanardağ · Kişisel koleksiyon',512,350);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t})();
+add(new THREE.PlaneGeometry(6.2,3.1),new THREE.MeshBasicMaterial({map:title,transparent:true}),0,2.4,-HL+2.04);
+add(new THREE.PlaneGeometry(9,5),glowM(warm,.6),0,2.4,-HL+2.03);
+/* kareler */
+const files=[['g1','Lodos'],['g2','Merdivenden iniş'],['g4','Sapanca'],['g6','Alanya, gece'],['g7','Yaz tatili'],['g8','Dalgaların içinde'],['g9','Tamamen siyah'],['g10','Pembe tuz gölü'],['g11','İstanbul'],['g13','Kemer\'de dalış'],['g14','Halloween'],['g15','Mavi pantolon'],['g3','Kahverengi ceket'],['g5','Kırmızı ışıkta']];
+const L=new THREE.TextureLoader(),frames=[];
+files.forEach((f,i)=>{const side=i%2?1:-1,k=Math.floor(i/2),z=-3-k*3.8;
+ /* her kareye: duvar yıkaması, zemin ışık havuzu, tavan spotu + ince huzme */
+ const wash=add(new THREE.PlaneGeometry(3.4,3.6),glowM(warm,.55),side*(HW-.02),2.3,z);wash.rotation.y=-side*Math.PI/2;
+ const pool=add(new THREE.PlaneGeometry(3.4,2.4),glowM(warm,.5),side*(HW-1.2),.015,z);pool.rotation.x=-Math.PI/2;
+ const sx=side*(HW-1.1),beam=add(new THREE.ConeGeometry(.9,3.9,24,1,true),new THREE.MeshBasicMaterial({color:0xffe9cc,transparent:true,opacity:.028,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide,fog:false}),side*(HW-.7),HH-2.0,z);beam.rotation.z=side*.28;
+ add(new THREE.CylinderGeometry(.06,.07,.14,12),M(0x15171c,.4,.6),sx,HH-.16,z);
+ L.load('../assets/img/gallery/'+f[0]+'.jpg',tx=>{tx.colorSpace=THREE.SRGBColorSpace;tx.anisotropy=8;const a=tx.image.width/tx.image.height,h=2.1,w=h*a,g=new THREE.Group();
+  g.position.set(side*(HW-.1),2.3,z);g.rotation.y=-side*Math.PI/2;
+  const fr=new THREE.Mesh(new RoundedBoxGeometry(w+.12,h+.12,.07,2,.01),M(0x14151a,.35,.5));fr.position.z=0;g.add(fr);
+  const mat=new THREE.Mesh(new THREE.PlaneGeometry(w+.07,h+.07),M(0xf3f0ea,.9));mat.position.z=.037;g.add(mat);
+  const img=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tx,color:0xdedede}));img.position.z=.04;g.add(img);
+  const sh=new THREE.Mesh(new THREE.PlaneGeometry(w+.9,h+.9),new THREE.MeshBasicMaterial({color:0,transparent:true,opacity:.22,depthWrite:false}));sh.position.z=-.04;g.add(sh);
+  g.userData={t:f[1]};scene.add(g);frames.push(g)})});
+/* ortada: yalnızca iki sade, uzun bank */
+[-8,-20].forEach(z=>{add(new RoundedBoxGeometry(2.6,.42,.7,3,.16),M(0xeceae5,.5),0,.21,z);add(new THREE.PlaneGeometry(4,2),glowM(cool,.25),0,.014,z).rotation.x=-Math.PI/2});
+/* gerçek ışıklar: az ve yumuşak */
+scene.add(new THREE.HemisphereLight(0xfff3e4,0x1a1c22,.55));
+[-4,-14,-24].forEach(z=>{const p=new THREE.PointLight(0xffe6c8,5,10);p.position.set(0,HH-.4,z);scene.add(p)});
+/* kontroller */
+let yaw=0,pitch=-.02,z=3,tz=3,drag=null;const keys={};cam.position.set(0,1.65,z);
+addEventListener('keydown',e=>keys[e.code]=1);addEventListener('keyup',e=>keys[e.code]=0);
+R.domElement.addEventListener('pointerdown',e=>{drag=[e.clientX,e.clientY,yaw,pitch]});addEventListener('pointerup',()=>drag=null);
+addEventListener('pointermove',e=>{if(!drag)return;yaw=drag[2]-(e.clientX-drag[0])*.004;pitch=Math.max(-.7,Math.min(.7,drag[3]-(e.clientY-drag[1])*.004))});
+addEventListener('wheel',e=>{tz+=e.deltaY*.01},{passive:true});
+const cap=document.getElementById('cap'),ray=new THREE.Raycaster();let intro=0;
+const comp=new EffectComposer(R);comp.addPass(new RenderPass(scene,cam));comp.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),.28,.6,.92));comp.addPass(new OutputPass());
+addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();R.setSize(innerWidth,innerHeight);comp.setSize(innerWidth,innerHeight)});
+const clk=new THREE.Clock();(function loop(){requestAnimationFrame(loop);const dt=Math.min(clk.getDelta(),.05),el=clk.elapsedTime;
+ if(keys.KeyW||keys.ArrowUp)tz-=dt*3.2;if(keys.KeyS||keys.ArrowDown)tz+=dt*3.2;
+ if(intro<1&&!drag&&!(keys.KeyW||keys.ArrowUp)){intro=Math.min(1,intro+dt*.05);tz=3-intro*13}else intro=1;
+ tz=Math.max(-HL+4.5,Math.min(3.2,tz));z+=(tz-z)*.08;cam.position.set(0,1.65+Math.sin(el*1.4)*.012,z);cam.rotation.set(pitch,yaw,0,'YXZ');
+ frames.forEach(f=>f.userData.hov=0);ray.setFromCamera({x:0,y:0},cam);const hit=ray.intersectObjects(frames.flatMap(f=>f.children),false)[0];
+ if(hit&&hit.distance<9){const g=hit.object.parent;g.userData.hov=1;cap.textContent=g.userData.t;cap.classList.add('on')}else cap.classList.remove('on');
+ frames.forEach(f=>{const s=Math.sign(f.position.x),t=s*(HW-.1-(f.userData.hov?.12:0));f.position.x+=(t-f.position.x)*.15});
+ comp.render()})();
+</script>
