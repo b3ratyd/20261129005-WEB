@@ -7,7 +7,7 @@ from html import escape as esc
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 # ======================= CONFIG (BURAYI DEĞİŞTİRİN) =======================
-SITE_URL = "https://www.example.com"          # domain aldığınızda güncelleyin (sonunda / olmasın)
+SITE_URL = "https://b3ratyd.github.io/20261129005-WEB"          # alan adı alınınca "https://alanadin.com" yapın (sonunda / olmasın)
 FIRST, LAST = "Berat", "Yanardağ"
 STUDENT_NO = "20261129005"
 def _env(name):
@@ -28,8 +28,8 @@ PHONE_DISPLAY, PHONE_TEL = "0552 709 01 66", "+905527090166"
 CITY = {"tr": "Antalya", "en": "Antalya"}
 ADDRESS = {"tr": "Pınarbaşı Mahallesi, Anadolu Caddesi, Akdeniz Üniversitesi Kampüsü İçi No: 156/4, 07070 Konyaaltı / Antalya", "en": "Pınarbaşı Mahallesi, Anadolu Caddesi, Akdeniz University Campus No: 156/4, 07070 Konyaaltı / Antalya"}
 DEPT = {"tr": "Bilgisayar Programcılığı", "en": "Computer Programming"}
-GITHUB = "https://github.com/ornek"            # varsa; yoksa "" bırakın
-LINKEDIN = "https://www.linkedin.com/in/ornek"  # varsa; yoksa "" bırakın
+GITHUB = "https://github.com/b3ratyd"            # varsa; yoksa "" bırakın
+LINKEDIN = ""  # LinkedIn adresin varsa buraya yaz (ör. "https://www.linkedin.com/in/kullanici"); yoksa "" bırakın
 PORTRAIT = "portrait.jpg"                      # kendi fotoğrafınız: assets/img/portrait.jpg yapıp burayı değiştirin
 PORTRAIT_SIZE = (600, 750)
 BUILD_DATE = datetime.date.today().isoformat()
@@ -250,7 +250,7 @@ def room_data(lang):
             "plabels": PLABELS[lang],
             "roles": [t("Yazılım geliştirme", "Software development"), t("Web arayüz tasarımı", "Web interface design"), t("Dijital görsel üretim", "Digital visual production")],
             "fly": {"from": "Antalya", "to": "Gmail", "route": "ANTALYA → GMAIL (MOUNTAIN VIEW)", "sending": t("Mesajın yola çıktı…", "Your message is on its way…"), "done": t("Mesajın ulaştı ✓", "Message delivered ✓"), "fail": t("Yolculuk yarıda kaldı", "The journey was interrupted")},
-            "game": GAME_T[lang], "dive": DIVE_T[lang], "blogT": [t("AI ile 3B site", "A 3D site with AI"), t("Backend'siz form", "A form, no backend"), t("Photoshop → web", "Photoshop → web")], "t": {"play": t("Oyna ▶", "Play ▶"), "noStory": t("✎ Bu karenin hikâyesini yakında anlatacağım.", "✎ I'll tell this photo's story soon."), "open": t("Sayfayı aç →", "Open page →"), "slide": t("Kay! 🛝", "Slide! 🛝"), "deep": [t("Derinlik", "Depth"), t("tüp dalış: sessizlik, nefes ve merak", "scuba diving: silence, breath and curiosity")]}}
+            "game": GAME_T[lang], "dive": DIVE_T[lang], "blogT": [t("AI ile 3B site", "A 3D site with AI"), t("Backend'siz form", "A form, no backend"), t("Photoshop → web", "Photoshop → web")], "t": {"aboutCap": t("Web & hareketli grafik", "Web & motion graphics"), "play": t("Oyna ▶", "Play ▶"), "noStory": t("✎ Bu karenin hikâyesini yakında anlatacağım.", "✎ I'll tell this photo's story soon."), "open": t("Sayfayı aç →", "Open page →"), "slide": t("Kay! 🛝", "Slide! 🛝"), "deep": [t("Derinlik", "Depth"), t("tüp dalış: sessizlik, nefes ve merak", "scuba diving: silence, breath and curiosity")]}}
 
 
 def _head(lang, key, title, desc, ld, css):
@@ -813,6 +813,14 @@ def main():
 """
     (ROOT / "llms.txt").write_text(llms, encoding="utf-8")
     (ROOT / "assets/img/skyline.svg").write_text(make_skyline(), encoding="utf-8")
+    # önbellek kırıcı: css/js adreslerine sürüm eklenir (telefonlar eski dosyayı tutmasın). Sürümü artırmak için ASSET_V değiştir.
+    ASSET_V = "20261125p"
+    for lg in ("tr", "en"):
+        for f in (ROOT / lg).glob("*.html"):
+            h = f.read_text(encoding="utf-8")
+            h2 = re.sub(r'(assets/(?:css|js)/[\w.-]+\.(?:css|js))(?!\?)', r'\1?v=' + ASSET_V, h)
+            if h2 != h:
+                f.write_text(h2, encoding="utf-8")
     print("Sayfalar üretildi.")
 
 

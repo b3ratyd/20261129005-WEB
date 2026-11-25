@@ -1,6 +1,6 @@
 /* Oyun Odası: 4 oyun (3 öğretici + 1 eğlence) ve ders duvarı için seviye seçici.
    startArcade(G, urls, onClaim, which, onLevel)  which: 'atelier' | 'tag' | 'bug' | 'squash' | 'lesson' | boş = menü */
-import { startGame } from './game.js';
+import { startGame } from './game.js?v=20261125p';
 
 const EN = document.documentElement.lang === 'en';
 const T2 = (tr, en) => (EN ? en : tr);

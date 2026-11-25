@@ -7,7 +7,8 @@ export function enhance(kind, ctx) {
   if (g && ST) g.registerPlugin(ST);
   const offs = [], on = (t, e, f, o) => { t.addEventListener(e, f, o); offs.push(() => t.removeEventListener(e, f, o)); };
   const head = sbody.querySelector('.page-head');
-  swin.classList.add('stage-on');
+  const PH = innerWidth <= 700; /* telefon: WebGL sahne yerine hafif CSS animasyonlu başlık görseli */
+  swin.classList.add(PH ? 'phone-hero' : 'stage-on');
   { const dbg = new URLSearchParams(location.search).get('scroll'); if (dbg) setTimeout(() => { sbody.scrollTop = +dbg; }, 2500); } /* yalnızca test */
 
   /* imleç ışığı */
@@ -15,7 +16,9 @@ export function enhance(kind, ctx) {
 
   /* hero: 3B yuva + başlık girişi */
   if (head) {
-    head.classList.add('has3d'); const s = document.createElement('div'); s.className = 'slot3d hero' + (kind === 'about' ? ' portrait' : ''); head.appendChild(s);
+    head.classList.add('has3d'); const s = document.createElement('div'); s.className = 'slot3d hero k-' + kind + (kind === 'about' ? ' portrait' : ''); head.appendChild(s);
+    if (PH && kind === 'about') { s.classList.add('css3d'); s.innerHTML = '<div class="phero"><i class="ring"></i><i class="ring r2"></i><img src="' + imgBase + 'portrait.jpg" alt="' + (D.cv.name || '') + '" width="600" height="800"><b>' + (D.cv.name || '') + '<small>' + (D.t.aboutCap || '') + '</small></b></div>'; }
+    if (PH && kind === 'contact') { s.classList.add('css3d'); s.innerHTML = '<div class="pglobe" aria-hidden="true"><i class="gl"></i><i class="gl l2"></i><i class="gl l3"></i><i class="lat a"></i><i class="lat b"></i><i class="lat c"></i><i class="ring"></i><span class="pin p1">Antalya</span><span class="pin p2">Gmail</span></div>'; }
     const h1 = head.querySelector('h1'); if (h1 && g) g.from(h1, { y: 40, opacity: 0, rotationX: -70, transformPerspective: 900, transformOrigin: '50% 100%', filter: 'blur(14px)', duration: 1.2, ease: 'power4.out', delay: .1 });
     if (g) g.from(head.querySelectorAll('p, .toc, .roles'), { y: 24, opacity: 0, duration: .9, ease: 'power3.out', stagger: .12, delay: .35 });
     if (g && ST) g.to(head.querySelectorAll('h1, p'), { y: -50, opacity: .25, ease: 'none', scrollTrigger: { trigger: head, scroller: sbody, start: 'top top', end: 'bottom top', scrub: true } });

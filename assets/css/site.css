@@ -297,3 +297,58 @@ body.inner .pg code, body.inner .pg pre, body.inner .pg .id-photo, body.inner .p
 /* galeri künyesi: uzun hikâye taşmasın (tamamı 'Hikâyeyi oku' ile açılır) */
 .jcap .js { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .jcap { max-height: 46vh; }
+
+/* GALERİ (telefon): koyu, sabit oranlı, yana kaydırmalı kart şeridi. Kaydırırken fotoğrafın şekli değişmez. Masaüstü etkilenmez. */
+@media (max-width: 40em) {
+  .pg .hall { background: none; box-shadow: none; padding: 0; border-radius: 0; overflow: visible; color: var(--tx); margin-bottom: 2rem; }
+  .pg .hall::after { display: none; }
+  .pg .hall-t { text-align: left; margin: 0 0 1rem; }
+  .pg .hall-t small { color: var(--c2); font: 600 .75rem ui-monospace, monospace; letter-spacing: .18em; }
+  .pg .hall-t h2 { color: #fff !important; -webkit-text-fill-color: #fff; font: 700 2rem/1.1 system-ui !important; margin: .3rem 0 .6rem !important; }
+  .pg .hall-t .rule { margin: 0; width: 56px; background: var(--c2); }
+  .pg .hall .masonry { display: flex; grid-template-columns: none; gap: .85rem; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: .3rem 1rem 1.2rem; margin: 0 -1rem; }
+  .pg .hall .masonry::-webkit-scrollbar { display: none; }
+  .pg .hall .shot { flex: 0 0 80%; margin: 0 !important; scroll-snap-align: center; scroll-snap-stop: always; transform: none !important; opacity: 1 !important; clip-path: none !important; filter: none !important; }
+  .pg .hall .shot::before { display: none; }
+  .pg .hall .shot button { padding: 0; border-radius: 24px; background: #0a0d18; aspect-ratio: 4 / 5; overflow: hidden; box-shadow: 0 16px 36px #000a, 0 0 0 1px #ffffff1f; transform: none !important; }
+  .pg .hall .shot img { width: 100%; height: 100%; object-fit: cover; }
+  .pg .hall .shot figcaption { position: absolute; left: 0; right: 0; bottom: 0; margin: 0; max-width: none; padding: 3rem 1.1rem 1rem; background: linear-gradient(transparent, #000d 70%); border: 0; box-shadow: none; border-radius: 0 0 24px 24px; color: #fff; pointer-events: none; font: 400 .9rem/1.4 system-ui; }
+  .pg .hall .shot figcaption .no { color: var(--c2); }
+  .pg .hall .shot figcaption strong { display: block; color: #fff; font: 700 1.15rem system-ui; }
+  .pg .hall .shot figcaption .tx { display: block; color: #ffffffd0; }
+  .pg .hall .shot figcaption em { display: none; }
+}
+/* TELEFON: içerik gecikmeden görünsün (kaydırınca beliren animasyon yok), başlık altı boşluğu yok */
+@media (max-width: 40em) {
+  .pg .r3:not(.in) { opacity: 1; }
+  .pg .r3.in { animation: none; }
+  .js .rv { opacity: 1 !important; transform: none !important; }
+  .has3d { min-height: 0 !important; }
+}
+/* PROJELER (telefon): kart tek sütun, üstte görsel (4:3), altta yazı. Boşluk ve uzama yok. */
+@media (max-width: 40em) {
+  .pg .plate a { display: block; }
+  .pg .plate-img { height: auto !important; min-height: 0 !important; aspect-ratio: 4 / 3; }
+  .pg .plate-img img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+  .pg .plate figcaption { padding: 1.1rem 1.2rem 1.3rem; align-self: auto; }
+}
+/* PROJELER (telefon): kart içi 3B derinlik dönüşümleri kapalı, yazı görselin altında düz akar */
+@media (max-width: 40em) {
+  .pg .plate, .pg .plate a, .pg .plate * { transform: none !important; transform-style: flat !important; }
+  .pg .plate-tag, .pg .plate h3 { position: static; }
+}
+/* PROJELER (telefon): kartlar düz bir sütun (eşit yükseklikli satır ve ortalama boşluğu yok), derinlik kaymasız */
+@media (max-width: 40em) {
+  .pg .plates, .pg .plates.all, .pg .plates.home { display: flex !important; flex-direction: column; gap: 1.2rem !important; }
+  .pg .plate { translate: none !important; }
+}
+/* TELEFON: kaydırmayla çalışan tekil dönüşüm özellikleri (scale/rotate/translate) kapalı: kartlar küçülüp kayarak boşluk bırakmasın */
+@media (max-width: 40em) {
+  .pg .plate, .pg .r3, .pg .tilt3d, .pg .shot, .pg .post { translate: none !important; scale: none !important; rotate: none !important; }
+}
+/* PROJELER (telefon): tekrarlayan ayrıntı listesi gizli, paragraf 4 satır, görsel 4:5 */
+@media (max-width: 40em) {
+  .pg .plate-img { aspect-ratio: 4 / 5; }
+  .pg .plate figcaption p { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .pg .plate .pdetail { display: none; }
+}

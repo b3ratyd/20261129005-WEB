@@ -10,8 +10,8 @@ export function mountStage(kind, ctx) {
   const { D, imgBase, swin, sbody, tier, state } = ctx, low = tier === 'low';
   const sbar = swin.querySelector('.sbar'), EN = document.documentElement.lang === 'en';
   const canvas = document.createElement('canvas'); canvas.className = 'stage3d'; swin.insertBefore(canvas, sbody);
-  const R = new THREE.WebGLRenderer({ canvas, antialias: !low, alpha: true, powerPreference: 'high-performance' });
-  R.setPixelRatio(Math.min(devicePixelRatio, low ? 1 : 1.5)); R.setClearColor(0, 0); R.autoClear = false;
+  const R = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+  R.setPixelRatio(Math.min(devicePixelRatio, 1.5)); R.setClearColor(0, 0); R.autoClear = false;
   const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(35, 1, .1, 200); cam.position.set(0, 0, 12);
   const sc2 = new THREE.Scene(), cam2 = new THREE.PerspectiveCamera(55, 1, .1, 200); sc2.fog = new THREE.Fog(0x070a14, 7, 36);
   scene.add(new THREE.AmbientLight(0xffffff, 1.1));

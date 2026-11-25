@@ -147,6 +147,25 @@ button.lbl:focus-visible { pointer-events: auto; }
   body:has(#card[style*="display: block"]) #dock { display: none; }
 }
 body:has(#card[style*="display: block"]) #fwd { display: none !important; }
+/* yürüme: sol başparmak joystick (her yöne), sağ parmak sürükleyerek bakar */
+#fwd { width: 112px; height: 112px; font-size: 0; border: 2px solid #fff5; background: #ffffff1a; }
+#fwd i { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: #ffffff66; border: 2px solid #ffffffaa; pointer-events: none; }
+/* site penceresi (telefon): üst çubuk tek satır, sahne kutusu başlığın altında, galeri kartları eğilmez */
+@media (max-width: 40em) {
+  .swin .sbar .sdots, .swin .sbar .surl { display: none; }
+  .swin .sbar { display: flex; align-items: center; gap: .4rem; flex-wrap: nowrap; padding: .4rem .5rem; }
+  .swin .sbar .stabs { display: flex; flex-wrap: nowrap; gap: .25rem; flex: 1 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+  .swin .sbar .stabs::-webkit-scrollbar { display: none; }
+  .swin .sbar .stabs a { flex: 0 0 auto; white-space: nowrap; padding: .4rem .7rem; font-size: 13px; }
+  .swin #sclose { flex: 0 0 auto; white-space: nowrap; padding: .45rem .7rem; font-size: 12px; }
+  .swin .has3d { min-height: 0 !important; justify-content: flex-start; margin-bottom: 1rem !important; }
+  .swin .slot3d.hero { position: relative !important; right: auto !important; top: auto !important; bottom: auto !important; width: 100% !important; height: 0 !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important; }
+  .swin .slot3d.hero.k-about { height: 22rem !important; margin-top: .4rem !important; }
+  .swin .slot3d.hero.k-contact { height: 17rem !important; margin-top: .4rem !important; }
+  .swin.phone-hero .id-photo, .swin.phone-hero .slot3d.skills { display: none; }
+  .swin .pg .tilt3d, .swin .pg .shot, .swin .pg .masonry > * { transform: none !important; }
+  .swin .pg .tilt3d::after { display: none; }
+}
 /* dokunmatik: sayfa kayması/yakınlaşması bakışı bozmasın, düğmelerde metin seçimi olmasın */
 body.room > canvas { touch-action: none; }
 #fwd, #dup, #ddn { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
@@ -216,3 +235,50 @@ body.diving #back { background: #ffb25a !important; color: #2a1408 !important; }
   body.diving #dtouch { display: block; position: fixed; left: .8rem; right: .8rem; top: 3.8rem; z-index: 13; padding: .5rem .8rem; border-radius: .8rem; background: #021018d9; border: 1px solid #5ee1ff55; color: #d8f6ff; font: 600 13px system-ui; text-align: center; animation: dtFade 10s forwards; pointer-events: none; }
 }
 @keyframes dtFade { 0%, 75% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+
+/* TELEFON: 3B sahne yerine hafif CSS animasyonlu başlık görseli (her telefonda çalışır, WebGL gerekmez) */
+.slot3d.css3d { display: grid; place-items: center; perspective: 900px; overflow: visible; }
+.phero { position: relative; width: min(60vw, 14rem); aspect-ratio: 3 / 4; animation: pfloat 6s ease-in-out infinite; }
+.phero img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 26px; border: 2px solid #ffb25acc; box-shadow: 0 22px 50px #000b, 0 0 46px #7fe4ff44; }
+.phero::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: 26px; background: linear-gradient(115deg, transparent 38%, #ffffff44 50%, transparent 62%) 0 0 / 260% 100%; animation: pshine 5s ease-in-out infinite; mix-blend-mode: overlay; pointer-events: none; }
+.phero .ring { position: absolute; left: 50%; top: 50%; width: 150%; aspect-ratio: 1; margin: -75% 0 0 -75%; border-radius: 50%; border: 2px solid #7fe4ff99; transform: rotateX(72deg) rotateZ(0deg); animation: pring 9s linear infinite; z-index: 0; }
+.phero .ring::after { content: ""; position: absolute; top: -6px; left: 50%; width: 11px; height: 11px; margin-left: -5px; border-radius: 50%; background: #ffb25a; box-shadow: 0 0 14px 3px #ffb25a; }
+.phero .ring.r2 { width: 128%; margin: -64% 0 0 -64%; border-color: #ffb25a88; animation-duration: 13s; animation-direction: reverse; }
+.phero b { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; padding: 2.4rem 1rem .9rem; border-radius: 0 0 26px 26px; background: linear-gradient(transparent, #000c); color: #fff; font: 700 1.05rem system-ui; }
+.phero b small { display: block; color: #ffb25a; font: 600 .78rem system-ui; }
+.pglobe { position: relative; width: min(68vw, 15rem); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 34% 30%, #7fe4ff33, #0b1a3a99 55%, #050a18cc); box-shadow: inset 0 0 40px #7fe4ff44, 0 0 60px #7fe4ff33; transform-style: preserve-3d; animation: pfloat 8s ease-in-out infinite; }
+.pglobe .gl { position: absolute; inset: 0; border-radius: 50%; border: 1.5px solid #7fe4ffaa; animation: gspin 9s linear infinite; }
+.pglobe .gl.l2 { animation-delay: -3s; } .pglobe .gl.l3 { animation-delay: -6s; }
+.pglobe .lat { position: absolute; border: 1.5px solid #7fe4ff66; border-radius: 50%; left: 0; right: 0; }
+.pglobe .lat.a { top: 42%; height: 16%; } .pglobe .lat.b { top: 17%; height: 11%; left: 13%; right: 13%; } .pglobe .lat.c { top: 72%; height: 11%; left: 13%; right: 13%; }
+.pglobe .ring { position: absolute; inset: -14%; border-radius: 50%; border: 2px solid #ffb25a77; transform: rotateX(74deg) rotateZ(0deg); animation: pring 12s linear infinite; }
+.pglobe .ring::after { content: ""; position: absolute; top: -6px; left: 50%; width: 11px; height: 11px; margin-left: -5px; border-radius: 50%; background: #7fe4ff; box-shadow: 0 0 14px 3px #7fe4ff; }
+.pglobe .pin { position: absolute; padding: .15rem .5rem; border-radius: 8px; border: 1px solid; background: #08101fdd; color: #fff; font: 700 .72rem system-ui; }
+.pglobe .p1 { top: 22%; left: -6%; border-color: #ffb25a; } .pglobe .p2 { top: 60%; right: -8%; border-color: #7fe4ff; }
+@keyframes pfloat { 0%, 100% { transform: translateY(0) rotateY(-4deg); } 50% { transform: translateY(-10px) rotateY(4deg); } }
+@keyframes pring { to { transform: rotateX(72deg) rotateZ(360deg); } }
+@keyframes pshine { 0% { background-position: 130% 0; } 60%, 100% { background-position: -40% 0; } }
+@keyframes gspin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+@media (prefers-reduced-motion: reduce) { .phero, .phero *, .pglobe, .pglobe *, .phero::after { animation: none !important; } }
+/* TELEFON: dalıştaki öğretici bilgi kartı küçük bir şerit olur, ekranı kaplamaz (üstte, kaydırılabilir) */
+@media (max-width: 40em) {
+  #dlesson { left: .5rem !important; right: .5rem !important; top: 7rem !important; bottom: auto !important; width: auto !important; max-height: 24vh; overflow-y: auto; padding: .55rem .75rem .65rem !important; border-radius: .9rem !important; background: #021018d9 !important; }
+  #dlesson .dl-top { margin-bottom: .2rem; }
+  #dlesson h3 { font-size: 1.05rem !important; margin: .1rem 0 .3rem !important; }
+  #dlesson .dl-row { margin-top: .3rem; padding: .35rem .6rem; }
+  #dlesson .dl-row b { font-size: 10px; }
+  #dlesson .dl-row p { font-size: .8rem !important; line-height: 1.35 !important; }
+  #dlesson .dfin { margin-top: .4rem; padding: .45rem .6rem; }
+  #dlesson .dfin b { font-size: .9rem !important; } #dlesson .dfin p { font-size: .8rem !important; }
+}
+/* DALIŞ KARTI (dokunmatik, dikey + yatay): küçük şerit, ekranı kaplamaz */
+@media (pointer: coarse) {
+  #dlesson { left: .5rem !important; right: auto !important; top: 3.6rem !important; bottom: auto !important; width: min(21rem, 52vw) !important; max-height: 38vh; overflow-y: auto; padding: .5rem .7rem .6rem !important; border-radius: .9rem !important; }
+  #dlesson h3 { font-size: 1rem !important; margin: .1rem 0 .25rem !important; }
+  #dlesson .dl-row { margin-top: .25rem; padding: .3rem .55rem; } #dlesson .dl-row b { font-size: 10px; }
+  #dlesson .dl-row p, #dlesson .dfin p { font-size: .78rem !important; line-height: 1.3 !important; }
+  #dlesson .dfin { margin-top: .35rem; padding: .4rem .55rem; } #dlesson .dfin b { font-size: .85rem !important; }
+}
+@media (pointer: coarse) and (orientation: portrait) {
+  #dlesson { right: .5rem !important; width: auto !important; top: 7rem !important; max-height: 24vh; }
+}
