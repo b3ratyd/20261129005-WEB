@@ -7,7 +7,7 @@ from html import escape as esc
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 # ======================= CONFIG (BURAYI DEĞİŞTİRİN) =======================
-SITE_URL = "https://b3ratyd.github.io/20261129005-WEB"          # alan adı alınınca "https://alanadin.com" yapın (sonunda / olmasın)
+SITE_URL = "https://beratyanardag.site"          # alan adı alınınca "https://alanadin.com" yapın (sonunda / olmasın)
 FIRST, LAST = "Berat", "Yanardağ"
 STUDENT_NO = "20261129005"
 def _env(name):

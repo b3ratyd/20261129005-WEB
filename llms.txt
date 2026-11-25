@@ -4,17 +4,17 @@
 > Berat Yanardağ, Antalya'da Bilgisayar Programcılığı okuyan; web arayüzü ve hareketli grafik üzerine çalışan bir öğrencidir.
 
 ## English
-- [Home](https://b3ratyd.github.io/20261129005-WEB/en/): introduction, featured projects, gallery preview
-- [About](https://b3ratyd.github.io/20261129005-WEB/en/about.html): CV, class schedule, interests, skills
-- [Projects](https://b3ratyd.github.io/20261129005-WEB/en/projects.html): Graphic Animation I course pieces
-- [Blog](https://b3ratyd.github.io/20261129005-WEB/en/blog.html): posts on building a 3D site with AI, a backend-free contact form, designing a web interface in Photoshop
-- [Gallery](https://b3ratyd.github.io/20261129005-WEB/en/gallery.html): fifteen photos with short captions
-- [Contact](https://b3ratyd.github.io/20261129005-WEB/en/contact.html): address, phone, email and contact form
+- [Home](https://beratyanardag.site/en/): introduction, featured projects, gallery preview
+- [About](https://beratyanardag.site/en/about.html): CV, class schedule, interests, skills
+- [Projects](https://beratyanardag.site/en/projects.html): Graphic Animation I course pieces
+- [Blog](https://beratyanardag.site/en/blog.html): posts on building a 3D site with AI, a backend-free contact form, designing a web interface in Photoshop
+- [Gallery](https://beratyanardag.site/en/gallery.html): fifteen photos with short captions
+- [Contact](https://beratyanardag.site/en/contact.html): address, phone, email and contact form
 
 ## Türkçe
-- [Ana sayfa](https://b3ratyd.github.io/20261129005-WEB/tr/)
-- [Hakkımda](https://b3ratyd.github.io/20261129005-WEB/tr/hakkimda.html)
-- [Projeler](https://b3ratyd.github.io/20261129005-WEB/tr/projeler.html)
-- [Blog](https://b3ratyd.github.io/20261129005-WEB/tr/blog.html)
-- [Galeri](https://b3ratyd.github.io/20261129005-WEB/tr/galeri.html)
-- [İletişim](https://b3ratyd.github.io/20261129005-WEB/tr/iletisim.html)
+- [Ana sayfa](https://beratyanardag.site/tr/)
+- [Hakkımda](https://beratyanardag.site/tr/hakkimda.html)
+- [Projeler](https://beratyanardag.site/tr/projeler.html)
+- [Blog](https://beratyanardag.site/tr/blog.html)
+- [Galeri](https://beratyanardag.site/tr/galeri.html)
+- [İletişim](https://beratyanardag.site/tr/iletisim.html)

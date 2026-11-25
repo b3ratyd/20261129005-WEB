@@ -17,4 +17,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: https://b3ratyd.github.io/20261129005-WEB/sitemap.xml
+Sitemap: https://beratyanardag.site/sitemap.xml
